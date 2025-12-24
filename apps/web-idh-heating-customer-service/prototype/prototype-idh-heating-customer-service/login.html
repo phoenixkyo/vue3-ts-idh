@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IDH智慧供热客服系统 - 登录</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="main.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  </head>
+  <body class="login-page">
+    <div class="login-page-container">
+      <!-- 系统标题 -->
+      <div class="login-header">
+        <h1><i class="fas fa-fire"></i> IDH智慧供热客服系统</h1>
+        <p>专业供热客服管理平台，为您提供全面的供热业务管理解决方案</p>
+      </div>
+
+      <!-- 登录卡片 -->
+      <div class="login-container">
+        <!-- 左侧宣传区域 -->
+        <div class="login-left">
+          <h2>智慧供热，温暖万家</h2>
+          <p>
+            IDH智慧供热客服系统是一款综合性的供热业务管理平台，集成了工单管理、收费管理、在线报修、数据分析、工作流等核心功能模块，帮助供热企业提升服务质量和管理效率。
+          </p>
+          <ul class="features-list">
+            <li><i class="fas fa-check-circle"></i> 客服工单全流程管理</li>
+            <li><i class="fas fa-check-circle"></i> 收费管理与收据打印</li>
+            <li><i class="fas fa-check-circle"></i> 实时数据可视化展示</li>
+            <li><i class="fas fa-check-circle"></i> 多维度数据分析统计</li>
+            <li><i class="fas fa-check-circle"></i> 在线报修以及工作流</li>
+          </ul>
+
+          <div class="login-info">
+            <p>首次使用请先注册账户，注册后可使用系统所有功能。</p>
+          </div>
+        </div>
+
+        <!-- 右侧表单区域 -->
+        <div class="login-right">
+          <!-- 表单切换选项卡 -->
+          <div class="form-tabs">
+            <button class="tab-btn active" id="loginTabBtn">登录</button>
+            <button class="tab-btn" id="registerTabBtn">注册</button>
+          </div>
+
+          <!-- 消息提示区域 -->
+          <div class="message" id="messageBox"></div>
+
+          <!-- 登录表单 -->
+          <div class="form-container">
+            <div class="form-content active" id="loginForm">
+              <form id="loginFormElement">
+                <div class="login-form-group">
+                  <label for="loginUsername">用户名</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <input
+                      type="text"
+                      class="login-form-control"
+                      id="loginUsername"
+                      placeholder="请输入用户名"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="login-form-group">
+                  <label for="loginPassword">密码</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input
+                      type="password"
+                      class="login-form-control"
+                      id="loginPassword"
+                      placeholder="请输入密码"
+                      required
+                    />
+                    <button
+                      type="button"
+                      class="password-toggle"
+                      id="loginPasswordToggle"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="login-form-group login-form-remember">
+                  <label class="login-checkbox-label">
+                    <input
+                      type="checkbox"
+                      id="rememberMe"
+                      class="login-checkbox"
+                    />
+                    记住我
+                  </label>
+                  <a href="#" class="login-forgot-link">忘记密码？</a>
+                </div>
+
+                <button
+                  type="submit"
+                  class="login-btn login-btn-primary"
+                  id="loginBtn"
+                >
+                  <i class="fas fa-sign-in-alt"></i> 登录系统
+                </button>
+              </form>
+
+              <div class="login-form-footer">
+                <!-- p>测试账户：admin / 123456</p -->
+                <p class="login-form-footer-text">首次使用请先注册新账户</p>
+              </div>
+            </div>
+
+            <!-- 注册表单 -->
+            <div class="form-content" id="registerForm">
+              <form id="registerFormElement">
+                <div class="login-form-group">
+                  <label for="registerUsername">用户名</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <input
+                      type="text"
+                      class="login-form-control"
+                      id="registerUsername"
+                      placeholder="请输入用户名(2-20位)"
+                      required
+                    />
+                  </div>
+                  <div class="form-hint">
+                    用户名长度为2-20个字符，可包含中文、字母、数字和下划线
+                  </div>
+                </div>
+
+                <div class="login-form-group">
+                  <label for="registerPassword">密码</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input
+                      type="password"
+                      class="login-form-control"
+                      id="registerPassword"
+                      placeholder="请输入密码(6-20位)"
+                      required
+                    />
+                    <button
+                      type="button"
+                      class="password-toggle"
+                      id="registerPasswordToggle"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                  <div class="form-hint">
+                    密码长度为6-20个字符，建议使用字母和数字组合
+                  </div>
+                </div>
+
+                <div class="login-form-group">
+                  <label for="confirmPassword">确认密码</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input
+                      type="password"
+                      class="login-form-control"
+                      id="confirmPassword"
+                      placeholder="请再次输入密码"
+                      required
+                    />
+                    <button
+                      type="button"
+                      class="password-toggle"
+                      id="confirmPasswordToggle"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  class="login-btn login-btn-accent"
+                  id="registerBtn"
+                >
+                  <i class="fas fa-user-plus"></i> 注册新账户
+                </button>
+              </form>
+
+              <div class="login-form-footer">
+                <p>注册后即可登录系统，使用所有功能</p>
+                <p class="login-form-footer-text">
+                  已有账户？<a
+                    href="#"
+                    id="switchToLogin"
+                    class="login-switch-link"
+                    >立即登录</a
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 页脚 -->
+      <footer class="login-footer">
+        <p>
+          IDH智慧供热客服系统 © 2025 | 客服热线：400-123-4567 |
+          技术支持：tech@hzzxxny.com
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      // 用户存储键名
+      const USER_STORAGE_KEY = 'idh_heating_login_users';
+
+      // DOM元素
+      const loginTabBtn = document.getElementById('loginTabBtn');
+      const registerTabBtn = document.getElementById('registerTabBtn');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const loginFormElement = document.getElementById('loginFormElement');
+      const registerFormElement = document.getElementById(
+        'registerFormElement',
+      );
+      const messageBox = document.getElementById('messageBox');
+      const switchToLoginLink = document.getElementById('switchToLogin');
+
+      // 密码显示/隐藏切换
+      const loginPasswordToggle = document.getElementById(
+        'loginPasswordToggle',
+      );
+      const registerPasswordToggle = document.getElementById(
+        'registerPasswordToggle',
+      );
+      const confirmPasswordToggle = document.getElementById(
+        'confirmPasswordToggle',
+      );
+
+      // 初始化函数
+      document.addEventListener('DOMContentLoaded', function () {
+        // 初始化localStorage用户数据
+        initUserStorage();
+
+        // 绑定事件监听器
+        bindEventListeners();
+
+        // 自动填充登录表单
+        autoFillLoginForm();
+
+        // 检查是否有已登录用户
+        checkLoggedInUser();
+      });
+
+      // 自动填充登录表单
+      function autoFillLoginForm() {
+        try {
+          // 从localStorage获取保存的登录信息
+          const rememberedUser = localStorage.getItem('idh_remembered_user');
+          if (rememberedUser) {
+            const userData = JSON.parse(rememberedUser);
+
+            // 填充用户名
+            document.getElementById('loginUsername').value = userData.username;
+
+            // 如果保存了密码，解码并填充
+            if (userData.password) {
+              const decodedPassword = atob(userData.password);
+              document.getElementById('loginPassword').value = decodedPassword;
+            }
+
+            // 勾选"记住我"复选框
+            document.getElementById('rememberMe').checked = true;
+          }
+        } catch (error) {
+          console.error('自动填充登录表单失败：', error);
+        }
+      }
+
+      // 初始化用户存储
+      function initUserStorage() {
+        const users = getUsersFromStorage();
+
+        // 如果没有用户，创建一个默认管理员账户
+        if (users.length === 0) {
+          // 对默认密码进行哈希处理
+          const hashedPassword = CryptoJS.SHA256('123456').toString(
+            CryptoJS.enc.Hex,
+          );
+
+          const defaultUser = {
+            username: 'admin',
+            password: hashedPassword,
+            createdAt: new Date().toISOString(),
+            isAdmin: true,
+          };
+
+          users.push(defaultUser);
+          saveUsersToStorage(users);
+          console.log('默认管理员账户已创建: admin / 123456');
+        }
+      }
+
+      // 从localStorage获取用户数据
+      function getUsersFromStorage() {
+        const usersJSON = localStorage.getItem(USER_STORAGE_KEY);
+        return usersJSON ? JSON.parse(usersJSON) : [];
+      }
+
+      // 保存用户数据到localStorage
+      function saveUsersToStorage(users) {
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
+      }
+
+      // 绑定事件监听器
+      function bindEventListeners() {
+        // 选项卡切换
+        loginTabBtn.addEventListener('click', () => switchForm('login'));
+        registerTabBtn.addEventListener('click', () => switchForm('register'));
+        switchToLoginLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchForm('login');
+        });
+
+        // 密码显示/隐藏切换
+        loginPasswordToggle.addEventListener('click', () =>
+          togglePasswordVisibility('loginPassword'),
+        );
+        registerPasswordToggle.addEventListener('click', () =>
+          togglePasswordVisibility('registerPassword'),
+        );
+        confirmPasswordToggle.addEventListener('click', () =>
+          togglePasswordVisibility('confirmPassword'),
+        );
+
+        // 表单提交
+        loginFormElement.addEventListener('submit', handleLogin);
+        registerFormElement.addEventListener('submit', handleRegister);
+      }
+
+      // 切换表单
+      function switchForm(formType) {
+        if (formType === 'login') {
+          loginTabBtn.classList.add('active');
+          registerTabBtn.classList.remove('active');
+          loginForm.classList.add('active');
+          registerForm.classList.remove('active');
+          clearMessage();
+        } else if (formType === 'register') {
+          loginTabBtn.classList.remove('active');
+          registerTabBtn.classList.add('active');
+          loginForm.classList.remove('active');
+          registerForm.classList.add('active');
+          clearMessage();
+        }
+      }
+
+      // 切换密码可见性
+      function togglePasswordVisibility(passwordFieldId) {
+        const passwordField = document.getElementById(passwordFieldId);
+        const toggleButton = document.getElementById(
+          `${passwordFieldId}Toggle`,
+        );
+
+        if (passwordField.type === 'password') {
+          passwordField.type = 'text';
+          toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        } else {
+          passwordField.type = 'password';
+          toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+        }
+      }
+
+      // 显示消息
+      function showMessage(message, type = 'error') {
+        messageBox.textContent = message;
+        messageBox.className = `message ${type}`;
+
+        // 如果是成功消息，3秒后自动清除
+        if (type === 'success') {
+          setTimeout(() => {
+            clearMessage();
+          }, 3000);
+        }
+      }
+
+      // 清除消息
+      function clearMessage() {
+        messageBox.textContent = '';
+        messageBox.className = 'message';
+      }
+
+      // 处理登录
+      function handleLogin(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+
+        // 验证输入
+        if (!username || !password) {
+          showMessage('请输入用户名和密码');
+          return;
+        }
+
+        // 获取用户数据
+        const users = getUsersFromStorage();
+
+        // 查找用户
+        const user = users.find((u) => u.username === username);
+
+        if (!user) {
+          showMessage('用户名不存在');
+          return;
+        }
+
+        // 对用户输入的密码进行哈希处理，然后与存储的哈希密码比较
+        const hashedPassword = CryptoJS.SHA256(password).toString(
+          CryptoJS.enc.Hex,
+        );
+
+        if (user.password !== hashedPassword) {
+          showMessage('密码错误');
+          return;
+        }
+
+        // 登录成功
+        showMessage('登录成功，正在跳转...', 'success');
+
+        // 保存当前用户登录状态到sessionStorage
+        sessionStorage.setItem(
+          'currentUser',
+          JSON.stringify({
+            username: user.username,
+            isAdmin: user.isAdmin || false,
+            loginTime: new Date().toISOString(),
+          }),
+        );
+
+        // 检查是否需要记住登录信息
+        const rememberMe = document.getElementById('rememberMe').checked;
+        if (rememberMe) {
+          // 使用Base64编码保存密码（注意：这只是简单的混淆，不是真正的加密）
+          const encodedPassword = btoa(password);
+
+          // 将登录信息保存到localStorage
+          localStorage.setItem(
+            'idh_remembered_user',
+            JSON.stringify({
+              username: user.username,
+              password: encodedPassword,
+              savedAt: new Date().toISOString(),
+            }),
+          );
+        } else {
+          // 清除之前保存的登录信息
+          localStorage.removeItem('idh_remembered_user');
+        }
+
+        // 延迟跳转到主系统
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1000);
+      }
+
+      // 处理注册
+      function handleRegister(e) {
+        e.preventDefault();
+
+        const username = document
+          .getElementById('registerUsername')
+          .value.trim();
+        const password = document
+          .getElementById('registerPassword')
+          .value.trim();
+        const confirmPassword = document
+          .getElementById('confirmPassword')
+          .value.trim();
+
+        // 验证输入
+        if (!username || !password || !confirmPassword) {
+          showMessage('请填写所有字段');
+          return;
+        }
+
+        // 验证用户名格式
+        // 中文字符也应允许，且长度计算应合理
+        if (username.length < 2 || username.length > 20) {
+          showMessage('用户名长度应为2-20个字符');
+          return;
+        }
+
+        // 允许中文、字母、数字和下划线
+        if (!/^[\u4e00-\u9fa5a-zA-Z0-9_]+$/.test(username)) {
+          showMessage('用户名只能包含中文、字母、数字和下划线');
+          return;
+        }
+
+        // 验证密码格式
+        if (password.length < 6 || password.length > 20) {
+          showMessage('密码长度应为6-20个字符');
+          return;
+        }
+
+        // 验证密码匹配
+        if (password !== confirmPassword) {
+          showMessage('两次输入的密码不一致');
+          return;
+        }
+
+        // 获取用户数据
+        const users = getUsersFromStorage();
+
+        // 检查用户名是否已存在
+        if (users.some((u) => u.username === username)) {
+          showMessage('用户名已存在，请选择其他用户名');
+          return;
+        }
+
+        // 对密码进行哈希处理
+        const hashedPassword = CryptoJS.SHA256(password).toString(
+          CryptoJS.enc.Hex,
+        );
+
+        // 创建新用户
+        const newUser = {
+          username: username,
+          password: hashedPassword,
+          createdAt: new Date().toISOString(),
+          isAdmin: false,
+        };
+
+        // 保存用户
+        users.push(newUser);
+        saveUsersToStorage(users);
+
+        // 显示成功消息
+        showMessage('注册成功！请使用新账户登录', 'success');
+
+        // 清空表单
+        registerFormElement.reset();
+
+        // 切换到登录表单
+        setTimeout(() => {
+          switchForm('login');
+          // 自动填充用户名
+          document.getElementById('loginUsername').value = username;
+          document.getElementById('loginPassword').focus();
+        }, 2000);
+      }
+
+      // 检查是否有已登录用户
+      function checkLoggedInUser() {
+        const currentUser = sessionStorage.getItem('currentUser');
+
+        if (currentUser) {
+          // 如果有已登录用户，直接跳转到主系统
+          window.location.href = 'index.html';
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -13,6 +13,10 @@
       "path": "apps/web-ele",
     },
     {
+      "name": "@heating/web-idh-heating-customer-service",
+      "path": "apps/web-idh-heating-customer-service",
+    },
+    {
       "name": "@vben/web-naive",
       "path": "apps/web-naive",
     },
