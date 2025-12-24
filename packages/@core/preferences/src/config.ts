@@ -41,12 +41,12 @@ const defaultPreferences: Preferences = {
     styleType: 'normal',
   },
   copyright: {
-    companyName: 'Vben',
-    companySiteLink: 'https://www.vben.pro',
-    date: '2024',
+    companyName: '陕西合智泽熙新能源科技有限公司',
+    companySiteLink: 'https://www.hzzxxny.com',
+    date: '2022-2026',
     enable: true,
-    icp: '',
-    icpLink: '',
+    icp: '陕ICP备2024043614号',
+    icpLink: 'https://beian.miit.gov.cn/',
     settingShow: true,
   },
   footer: {

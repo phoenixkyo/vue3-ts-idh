@@ -50,6 +50,4 @@ vite.config.ts.*
 *.sw?
 .history
 .cursor
-prototype/prototype-idh-heating-customer-service/index.html
-prototype/prototype-idh-heating-customer-service/login.html
-prototype/prototype-idh-heating-customer-service/main.css
+.trae
