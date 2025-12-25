@@ -1,6 +1,6 @@
 import { eventHandler } from 'h3';
 import { verifyAccessToken } from '~/utils/jwt-utils';
-import { MOCK_CODES } from '~/utils/mock-data';
+import { getDBManager } from '~/utils/db-manager';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
 
 export default eventHandler(async (event) => {
@@ -9,8 +9,8 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  const codes =
-    MOCK_CODES.find((item) => item.username === userinfo.username)?.codes ?? [];
+  const dbManager = await getDBManager();
+  const users = dbManager.query('SELECT * FROM idh_user');
 
-  return useResponseSuccess(codes);
+  return useResponseSuccess(users);
 });

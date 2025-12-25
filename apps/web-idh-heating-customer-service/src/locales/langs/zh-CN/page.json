@@ -11,5 +11,12 @@
     "title": "概览",
     "analytics": "分析页",
     "workspace": "工作台"
+  },
+  "customerService": {
+    "title": "IDH智慧供热客服系统",
+    "workorder": "客服工单",
+    "cash": "线下缴费",
+    "analysis": "统计分析",
+    "settings": "系统设置"
   }
 }
