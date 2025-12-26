@@ -2,12 +2,12 @@ import type { EventHandlerRequest, H3Event } from 'h3';
 
 import { setResponseStatus } from 'h3';
 
-export function useResponseSuccess<T = any>(data: T, message = 'ok') {
+export function useResponseSuccess<T = any>(data: T) {
   return {
     code: 0,
     data,
     error: null,
-    message,
+    message: 'ok',
   };
 }
 
@@ -15,7 +15,7 @@ export function usePageResponseSuccess<T = any>(
   page: number | string,
   pageSize: number | string,
   list: T[],
-  { message = 'ok', total = list.length } = {},
+  { message = 'ok' } = {},
 ) {
   const pageData = pagination(
     Number.parseInt(`${page}`),
@@ -26,7 +26,7 @@ export function usePageResponseSuccess<T = any>(
   return {
     ...useResponseSuccess({
       items: pageData,
-      total,
+      total: list.length,
     }),
     message,
   };

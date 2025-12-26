@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   clearRefreshTokenCookie(event);
 
-  const userinfo = await verifyRefreshToken(refreshToken);
+  const userinfo = verifyRefreshToken(refreshToken);
   if (!userinfo) {
     return forbiddenResponse(event);
   }

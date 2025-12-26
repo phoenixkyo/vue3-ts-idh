@@ -1,36 +1,34 @@
 import type { EventHandlerRequest, H3Event } from 'h3';
 
+import type { UserInfo } from './mock-data';
+
 import { getHeader } from 'h3';
 import jwt from 'jsonwebtoken';
-import { getDBManager } from './db-manager';
+
+import { MOCK_USERS } from './mock-data';
 
 // TODO: Replace with your own secret key
 const ACCESS_TOKEN_SECRET = 'access_token_secret';
 const REFRESH_TOKEN_SECRET = 'refresh_token_secret';
 
-export interface UserPayload {
-  id: number;
-  username: string;
-  realName: string;
-  roles: string[];
-  homePath?: string;
+export interface UserPayload extends UserInfo {
   iat: number;
   exp: number;
 }
 
-export function generateAccessToken(user: any) {
+export function generateAccessToken(user: UserInfo) {
   return jwt.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: '7d' });
 }
 
-export function generateRefreshToken(user: any) {
+export function generateRefreshToken(user: UserInfo) {
   return jwt.sign(user, REFRESH_TOKEN_SECRET, {
     expiresIn: '30d',
   });
 }
 
-export async function verifyAccessToken(
+export function verifyAccessToken(
   event: H3Event<EventHandlerRequest>,
-): Promise<null | any> {
+): null | Omit<UserInfo, 'password'> {
   const authHeader = getHeader(event, 'Authorization');
   if (!authHeader?.startsWith('Bearer')) {
     return null;
@@ -45,20 +43,34 @@ export async function verifyAccessToken(
     const decoded = jwt.verify(
       token,
       ACCESS_TOKEN_SECRET,
-    ) as unknown as any;
+    ) as unknown as UserPayload;
 
-    return decoded;
+    const username = decoded.username;
+    const user = MOCK_USERS.find((item) => item.username === username);
+    if (!user) {
+      return null;
+    }
+    const { password: _pwd, ...userinfo } = user;
+    return userinfo;
   } catch {
     return null;
   }
 }
 
-export async function verifyRefreshToken(
+export function verifyRefreshToken(
   token: string,
-): Promise<null | any> {
+): null | Omit<UserInfo, 'password'> {
   try {
-    const decoded = jwt.verify(token, REFRESH_TOKEN_SECRET) as any;
-    return decoded;
+    const decoded = jwt.verify(token, REFRESH_TOKEN_SECRET) as UserPayload;
+    const username = decoded.username;
+    const user = MOCK_USERS.find(
+      (item) => item.username === username,
+    ) as UserInfo;
+    if (!user) {
+      return null;
+    }
+    const { password: _pwd, ...userinfo } = user;
+    return userinfo;
   } catch {
     return null;
   }
