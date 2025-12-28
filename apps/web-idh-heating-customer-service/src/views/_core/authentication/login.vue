@@ -13,27 +13,35 @@ defineOptions({ name: 'Login' });
 
 const authStore = useAuthStore();
 
-const MOCK_USER_OPTIONS: BasicOption[] = [
-  {
-    label: 'Super',
-    value: 'vben',
-  },
+// 角色列表，静态数据
+const roleOptions: BasicOption[] = [
   {
     label: 'Admin',
     value: 'admin',
   },
   {
     label: 'User',
-    value: 'jack',
+    value: 'user',
+  },
+  {
+    label: 'Guest',
+    value: 'guest',
   },
 ];
+
+// 模拟用户数据，关联角色和用户名
+const userRoleMap: Record<string, string> = {
+  admin: 'admin',
+  user: 'user',
+  guest: 'guest',
+};
 
 const formSchema = computed((): VbenFormSchema[] => {
   return [
     {
       component: 'VbenSelect',
       componentProps: {
-        options: MOCK_USER_OPTIONS,
+        options: roleOptions,
         placeholder: $t('authentication.selectAccount'),
       },
       fieldName: 'selectAccount',
@@ -42,7 +50,7 @@ const formSchema = computed((): VbenFormSchema[] => {
         .string()
         .min(1, { message: $t('authentication.selectAccount') })
         .optional()
-        .default('vben'),
+        .default('admin'),
     },
     {
       component: 'VbenInput',
@@ -52,15 +60,13 @@ const formSchema = computed((): VbenFormSchema[] => {
       dependencies: {
         trigger(values, form) {
           if (values.selectAccount) {
-            const findUser = MOCK_USER_OPTIONS.find(
-              (item) => item.value === values.selectAccount,
-            );
-            if (findUser) {
-              form.setValues({
-                password: '123456',
-                username: findUser.value,
-              });
-            }
+            // 根据角色获取对应的用户名
+            const username =
+              userRoleMap[values.selectAccount] || values.selectAccount;
+            form.setValues({
+              password: '123456',
+              username,
+            });
           }
         },
         triggerFields: ['selectAccount'],

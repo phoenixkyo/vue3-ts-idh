@@ -1,54 +1,7 @@
-import { faker } from '@faker-js/faker';
 import { eventHandler } from 'h3';
 import { verifyAccessToken } from '~/utils/jwt-utils';
+import { getDb } from '~/utils/db';
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response';
-
-const formatterCN = new Intl.DateTimeFormat('zh-CN', {
-  timeZone: 'Asia/Shanghai',
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-});
-
-function generateMockDataList(count: number) {
-  const dataList = [];
-
-  for (let i = 0; i < count; i++) {
-    const dataItem: Record<string, any> = {
-      id: faker.string.uuid(),
-      pid: 0,
-      name: faker.commerce.department(),
-      status: faker.helpers.arrayElement([0, 1]),
-      createTime: formatterCN.format(
-        faker.date.between({ from: '2021-01-01', to: '2022-12-31' }),
-      ),
-      remark: faker.lorem.sentence(),
-    };
-    if (faker.datatype.boolean()) {
-      dataItem.children = Array.from(
-        { length: faker.number.int({ min: 1, max: 5 }) },
-        () => ({
-          id: faker.string.uuid(),
-          pid: dataItem.id,
-          name: faker.commerce.department(),
-          status: faker.helpers.arrayElement([0, 1]),
-          createTime: formatterCN.format(
-            faker.date.between({ from: '2023-01-01', to: '2023-12-31' }),
-          ),
-          remark: faker.lorem.sentence(),
-        }),
-      );
-    }
-    dataList.push(dataItem);
-  }
-
-  return dataList;
-}
-
-const mockData = generateMockDataList(10);
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -56,7 +9,36 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  const listData = structuredClone(mockData);
+  // 获取数据库实例
+  const db = await getDb();
 
-  return useResponseSuccess(listData);
+  // 查询所有部门信息
+  const depts = db.query(
+    `SELECT id, dept_code, dept_name as name, parent_id as pid, status, description as remark, created_at as createTime 
+     FROM sys_dept 
+     WHERE is_deleted = 0 
+     ORDER BY sort_order ASC`
+  );
+
+  // 将部门转换为树形结构
+  const buildDeptTree = (deptList: any[], parentId: number = 0) => {
+    return deptList
+      .filter(dept => dept.pid === parentId)
+      .map(dept => {
+        const children = buildDeptTree(deptList, dept.id);
+        const deptItem = {
+          ...dept
+        };
+
+        if (children.length > 0) {
+          deptItem.children = children;
+        }
+
+        return deptItem;
+      });
+  };
+
+  const deptTree = buildDeptTree(depts);
+
+  return useResponseSuccess(deptTree);
 });
