@@ -63,5 +63,23 @@
     "operation": "操作",
     "permissions": "权限",
     "setPermissions": "授权"
+  },
+  "user": {
+    "title": "用户管理",
+    "list": "用户列表",
+    "name": "用户",
+    "userName": "用户名",
+    "realName": "真实姓名",
+    "email": "邮箱",
+    "phone": "手机号",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "id": "用户ID",
+    "status": "状态",
+    "role": "角色",
+    "dept": "部门",
+    "createTime": "创建时间",
+    "operation": "操作",
+    "avatar": "头像"
   }
 }

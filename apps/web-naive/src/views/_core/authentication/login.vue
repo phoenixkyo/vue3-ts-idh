@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { VbenFormSchema } from '@vben/common-ui';
-import type { BasicOption } from '@vben/types';
 
 import { computed, markRaw } from 'vue';
 
@@ -13,62 +12,12 @@ defineOptions({ name: 'Login' });
 
 const authStore = useAuthStore();
 
-// 角色列表，静态数据
-const roleOptions: BasicOption[] = [
-  {
-    label: 'Super',
-    value: 'super',
-  },
-  {
-    label: 'Admin',
-    value: 'admin',
-  },
-  {
-    label: 'User',
-    value: 'user',
-  },
-];
-
-// 模拟用户数据，关联角色和用户名
-const userRoleMap: Record<string, string> = {
-  'super': 'admin',
-  'admin': 'vben',
-  'user': 'jack',
-};
-
 const formSchema = computed((): VbenFormSchema[] => {
   return [
-    {
-      component: 'VbenSelect',
-      componentProps: {
-        options: roleOptions,
-        placeholder: $t('authentication.selectAccount'),
-      },
-      fieldName: 'selectAccount',
-      label: $t('authentication.selectAccount'),
-      rules: z
-        .string()
-        .min(1, { message: $t('authentication.selectAccount') })
-        .optional()
-        .default('super'),
-    },
     {
       component: 'VbenInput',
       componentProps: {
         placeholder: $t('authentication.usernameTip'),
-      },
-      dependencies: {
-        trigger(values, form) {
-          if (values.selectAccount) {
-            // 根据角色获取对应的用户名
-            const username = userRoleMap[values.selectAccount] || values.selectAccount;
-            form.setValues({
-              password: '123456',
-              username: username,
-            });
-          }
-        },
-        triggerFields: ['selectAccount'],
       },
       fieldName: 'username',
       label: $t('authentication.username'),

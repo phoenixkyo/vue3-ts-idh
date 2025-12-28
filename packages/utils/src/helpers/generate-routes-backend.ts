@@ -51,8 +51,9 @@ function convertRoutes(
     }
 
     // layout转换
-    if (component && layoutMap[component]) {
-      route.component = layoutMap[component];
+    if (component && (layoutMap[component] || component === 'LAYOUT')) {
+      // 处理 'LAYOUT' 特殊值，映射到 BasicLayout
+      route.component = component === 'LAYOUT' ? layoutMap['BasicLayout'] : layoutMap[component];
       // 页面组件转换
     } else if (component) {
       const normalizePath = normalizeViewPath(component);

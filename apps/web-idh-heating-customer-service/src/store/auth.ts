@@ -1,5 +1,7 @@
 import type { Recordable, UserInfo } from '@vben/types';
 
+import type { AuthApi } from '#/api';
+
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -10,7 +12,13 @@ import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 import { ElNotification } from 'element-plus';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
+import {
+  getAccessCodesApi,
+  getUserInfoApi,
+  loginApi,
+  logoutApi,
+  registerApi,
+} from '#/api';
 import { $t } from '#/locales';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -105,6 +113,35 @@ export const useAuthStore = defineStore('auth', () => {
     return userInfo;
   }
 
+  /**
+   * 异步处理注册操作
+   * Asynchronously handle the register process
+   * @param params 注册表单数据
+   */
+  async function authRegister(
+    params: AuthApi.RegisterParams,
+    onSuccess?: () => Promise<void> | void,
+  ) {
+    try {
+      loginLoading.value = true;
+      const result = await registerApi(params);
+
+      // 注册成功后的处理
+      ElNotification({
+        message: result.message || $t('authentication.registerSuccess'),
+        title: $t('authentication.registerSuccess'),
+        type: 'success',
+      });
+
+      // 可以选择自动登录或者跳转到登录页面
+      onSuccess ? await onSuccess?.() : await router.push(LOGIN_PATH);
+
+      return result;
+    } finally {
+      loginLoading.value = false;
+    }
+  }
+
   function $reset() {
     loginLoading.value = false;
   }
@@ -112,6 +149,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     $reset,
     authLogin,
+    authRegister,
     fetchUserInfo,
     loginLoading,
     logout,
