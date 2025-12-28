@@ -260,7 +260,7 @@ const headerSlots = computed(() => {
         :collapsed="logoCollapsed"
         :src="preferences.logo.source"
         :src-dark="preferences.logo.sourceDark"
-        :text="preferences.app.name"
+        :text="$t('authentication.appTitle')"
         :theme="showHeaderNav ? headerTheme : theme"
         @click="clickLogo"
       >
@@ -353,7 +353,7 @@ const headerSlots = computed(() => {
         :fit="preferences.logo.fit"
         :src="preferences.logo.source"
         :src-dark="preferences.logo.sourceDark"
-        :text="preferences.app.name"
+        :text="$t('authentication.appTitle')"
         :theme="theme"
       >
         <template v-if="$slots['logo-text']" #text>

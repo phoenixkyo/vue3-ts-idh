@@ -1,5 +1,6 @@
 {
   "welcomeBack": "欢迎回来",
+  "appTitle": "IDH智慧供热客服系统",
   "pageTitle": "智慧供热、温暖万家",
   "pageDesc": "专业供热客服管理平台，为您提供全面的供热业务管理解决方案",
   "loginSuccess": "登录成功",
@@ -57,6 +58,9 @@
   "google": "Google",
   "loginAgainTitle": "重新登录",
   "loginAgainSubTitle": "您的登录状态已过期，请重新登录以继续。",
+  "usernamePasswordIncorrect": "用户名或密码错误",
+  "usernamePasswordRequired": "用户名和密码是必填项",
+  "loginFailed": "登录失败，请稍后重试",
   "layout": {
     "center": "居中",
     "alignLeft": "居左",

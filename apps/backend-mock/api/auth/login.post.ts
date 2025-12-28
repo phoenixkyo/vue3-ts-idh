@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 import bcrypt from 'bcryptjs';
 import { defineEventHandler, readBody, setResponseStatus } from 'h3';
 import {
@@ -11,13 +14,56 @@ import {
   useResponseSuccess,
 } from '~/utils/response';
 
+// 读取国际化文件
+function loadLocaleMessages(locale: string) {
+  const localePath = path.resolve(
+    process.cwd(),
+    `../../packages/locales/src/langs/${locale}/authentication.json`,
+  );
+
+  try {
+    if (fs.existsSync(localePath)) {
+      const data = fs.readFileSync(localePath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error(`Failed to load locale messages for ${locale}:`, error);
+  }
+
+  // 加载默认语言（英文）
+  const defaultPath = path.resolve(
+    process.cwd(),
+    '../../packages/locales/src/langs/en-US/authentication.json',
+  );
+
+  try {
+    if (fs.existsSync(defaultPath)) {
+      const data = fs.readFileSync(defaultPath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Failed to load default locale messages:', error);
+  }
+
+  return {};
+}
+
+// 根据请求头获取语言偏好
+function getPreferredLanguage(event: any): string {
+  const acceptLanguage = event.node.req.headers['accept-language'] || 'en-US';
+  return acceptLanguage.startsWith('zh') ? 'zh-CN' : 'en-US';
+}
+
 export default defineEventHandler(async (event) => {
+  const lang = getPreferredLanguage(event);
+  const localeMessages = loadLocaleMessages(lang);
   const { password, username } = await readBody(event);
   if (!password || !username) {
     setResponseStatus(event, 400);
     return useResponseError(
       'BadRequestException',
-      'Username and password are required',
+      localeMessages.usernamePasswordRequired ||
+        'Username and password are required',
     );
   }
 
@@ -37,7 +83,11 @@ export default defineEventHandler(async (event) => {
     if (!findUser) {
       console.log('未找到用户');
       clearRefreshTokenCookie(event);
-      return forbiddenResponse(event, 'Username or password is incorrect.');
+      return forbiddenResponse(
+        event,
+        localeMessages.usernamePasswordIncorrect ||
+          'Username or password is incorrect.',
+      );
     }
 
     console.log(
@@ -84,7 +134,11 @@ export default defineEventHandler(async (event) => {
       !isPasswordValid
     ) {
       clearRefreshTokenCookie(event);
-      return forbiddenResponse(event, 'Username or password is incorrect.');
+      return forbiddenResponse(
+        event,
+        localeMessages.usernamePasswordIncorrect ||
+          'Username or password is incorrect.',
+      );
     }
 
     // 获取用户角色
@@ -115,6 +169,9 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     console.error('登录失败:', error);
     clearRefreshTokenCookie(event);
-    return forbiddenResponse(event, '登录失败，请稍后重试');
+    return forbiddenResponse(
+      event,
+      localeMessages.loginFailed || 'Login failed, please try again later',
+    );
   }
 });

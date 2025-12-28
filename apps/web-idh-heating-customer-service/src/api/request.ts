@@ -97,7 +97,21 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
       // 这里可以根据业务进行定制,你可以拿到 error 内的信息进行定制化处理，根据不同的 code 做不同的提示，而不是直接使用 message.error 提示 msg
       // 当前mock接口返回的错误字段是 error 或者 message
       const responseData = error?.response?.data ?? {};
-      const errorMessage = responseData?.error ?? responseData?.message ?? '';
+      let errorMessage = responseData?.error ?? responseData?.message ?? '';
+
+      // 将错误码转换为国际化文本
+      if (errorMessage) {
+        // 尝试从authentication国际化配置中获取对应的文本
+        const i18nKey = `authentication.${errorMessage}`;
+        const i18nMessage = (window as any).$t
+          ? (window as any).$t(i18nKey)
+          : i18nKey;
+        // 如果i18nKey对应的文本存在（不是i18nKey本身），则使用国际化文本
+        if (i18nMessage !== i18nKey) {
+          errorMessage = i18nMessage;
+        }
+      }
+
       // 如果没有错误信息，则会根据状态码进行提示
       ElMessage.error(errorMessage || msg);
     }),

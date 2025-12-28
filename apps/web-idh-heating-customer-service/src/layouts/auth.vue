@@ -6,7 +6,7 @@ import { preferences } from '@vben/preferences';
 
 import { $t } from '#/locales';
 
-const appName = computed(() => preferences.app.name);
+const appName = computed(() => $t('authentication.appTitle'));
 const logo = computed(() => preferences.logo.source);
 const logoDark = computed(() => preferences.logo.sourceDark);
 </script>
