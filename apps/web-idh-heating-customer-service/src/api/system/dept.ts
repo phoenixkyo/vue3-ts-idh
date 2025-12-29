@@ -14,9 +14,10 @@ export namespace SystemDeptApi {
 /**
  * 获取部门列表数据
  */
-async function getDeptList() {
-  return requestClient.get<Array<SystemDeptApi.SystemDept>>(
+async function getDeptList(params?: Recordable<any>) {
+  return requestClient.get<{ items: Array<SystemDeptApi.SystemDept>; total: number }>(
     '/system/dept/list',
+    { params },
   );
 }
 

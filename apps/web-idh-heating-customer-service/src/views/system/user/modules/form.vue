@@ -1,14 +1,12 @@
 <script lang="ts" setup>
-import type { Recordable } from '@vben/types';
-
-import { computed, nextTick } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
-import { createUser, updateUser } from '#/api/system/user';
 import { getDeptList } from '#/api/system/dept';
 import { getRoleList } from '#/api/system/role';
+import { createUser, updateUser } from '#/api/system/user';
 import { $t } from '#/locales';
 
 import { useFormSchema } from '../data';
@@ -80,7 +78,7 @@ async function loadRoles() {
     const roleField = formApi.getField('roleId');
     if (roleField) {
       roleField.setProps({
-        options: roles.value.map(role => ({
+        options: roles.value.map((role) => ({
           label: role.name,
           value: role.id,
         })),
@@ -100,7 +98,7 @@ async function loadDepts() {
     const deptField = formApi.getField('deptId');
     if (deptField) {
       deptField.setProps({
-        options: depts.value.map(dept => ({
+        options: depts.value.map((dept) => ({
           label: dept.deptName,
           value: dept.id,
         })),
