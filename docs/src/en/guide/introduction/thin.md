@@ -28,11 +28,11 @@ If you don’t need documentation, you can delete the `docs` folder.
 
 ## Remove Mock Service
 
-If you don’t need the `Mock` service, you can delete the `apps/backend` folder. Also, remove the `VITE_NITRO_MOCK` variable from the `.env.development` file in your application.
+If you don’t need the `Mock` service, you can delete the `apps/backend` folder. Also, remove the `VITE_NITRO_SERVER` variable from the `.env.development` file in your application.
 
 ```bash
-# Whether to enable Nitro Mock service, true to enable, false to disable
-VITE_NITRO_MOCK=false
+# Whether to enable Nitro Server service, true to enable, false to disable
+VITE_NITRO_SERVER=false
 ```
 
 ## Installing Dependencies

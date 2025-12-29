@@ -1,6 +1,6 @@
 import type { PluginOption } from 'vite';
 
-import type { NitroMockPluginOptions } from '../typing';
+import type { NitroServerPluginOptions } from '../typing';
 
 import { colors, consola, getPackage } from '@vben/node-utils';
 
@@ -9,11 +9,11 @@ import { build, createDevServer, createNitro, prepare } from 'nitropack';
 
 const hmrKeyRe = /^runtimeConfig\.|routeRules\./;
 
-export const viteNitroMockPlugin = ({
-  mockServerPackage = '@vben/backend',
+export const viteNitroServerPlugin = ({
+  backendServerPackage = '@vben/backend',
   port = 5320,
   verbose = true,
-}: NitroMockPluginOptions = {}): PluginOption => {
+}: NitroServerPluginOptions = {}): PluginOption => {
   return {
     async configureServer(server) {
       const availablePort = await getPort({ port });
@@ -21,10 +21,10 @@ export const viteNitroMockPlugin = ({
         return;
       }
 
-      const pkg = await getPackage(mockServerPackage);
+      const pkg = await getPackage(backendServerPackage);
       if (!pkg) {
         consola.log(
-          `Package ${mockServerPackage} not found. Skip mock server.`,
+          `Package ${backendServerPackage} not found. Skip backend server.`,
         );
         return;
       }
@@ -36,12 +36,12 @@ export const viteNitroMockPlugin = ({
         _printUrls();
 
         consola.log(
-          `  ${colors.green('➜')}  ${colors.bold('Nitro Mock Server')}: ${colors.cyan(`http://localhost:${port}/api`)}`,
+          `  ${colors.green('➜')}  ${colors.bold('Nitro Backend Server')}: ${colors.cyan(`http://localhost:${port}/api`)}`,
         );
       };
     },
     enforce: 'pre',
-    name: 'vite:mock-server',
+    name: 'vite:nitro-server',
   };
 };
 
@@ -91,7 +91,9 @@ async function runNitroServer(rootDir: string, port: number, verbose: boolean) {
 
     if (verbose) {
       console.log('');
-      consola.success(colors.bold(colors.green('Nitro Mock Server started.')));
+      consola.success(
+        colors.bold(colors.green('Nitro Backend Server started.')),
+      );
     }
   };
   return await reload();

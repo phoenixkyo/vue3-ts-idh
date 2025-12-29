@@ -68,7 +68,7 @@ axios.get('/api/user').then((res) => {
 });
 ```
 
-此时，请求会被代理到 `http://localhost:5320/api/user`。
+此时，请求会被代理到 `http://localhost:/api/user`。
 
 ::: warning 注意
 
@@ -379,9 +379,9 @@ Mock 服务代码位于`apps/backend`目录下，无需手动启动，已经集�
 
 ## 关闭 Mock 服务
 
-mock的本质是一个真实的后端服务，如果不需要 mock 服务，可以在项目根目录下的 `.env.development` 文件中配置 `VITE_NITRO_MOCK=false` 即可关闭 mock 服务。
+mock的本质是一个真实的后端服务，如果不需要 mock 服务，可以在项目根目录下的 `.env.development` 文件中配置 `VITE_NITRO_SERVER=false` 即可关闭 mock 服务。
 
 ```bash
 # .env.development
-VITE_NITRO_MOCK=false
+VITE_NITRO_SERVER=false
 ```

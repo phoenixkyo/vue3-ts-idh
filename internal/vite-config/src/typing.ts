@@ -49,25 +49,25 @@ interface PrintPluginOptions {
 }
 
 /**
- * Nitro Mock 插件配置选项
- * @description 用于配置 Nitro Mock 服务器的行为
+ * Nitro Server 插件配置选项
+ * @description 用于配置 Nitro 后端服务器的行为
  */
-interface NitroMockPluginOptions {
+interface NitroServerPluginOptions {
   /**
-   * Mock 服务器包名
-   * @default '@vbenjs/nitro-mock'
+   * 后端服务器包名
+   * @default '@vben/backend'
    */
-  mockServerPackage?: string;
+  backendServerPackage?: string;
 
   /**
-   * Mock 服务端口
-   * @default 3000
+   * 后端服务端口
+   * @default 5320
    */
   port?: number;
 
   /**
-   * 是否打印 Mock 日志
-   * @default false
+   * 是否打印后端服务日志
+   * @default true
    */
   verbose?: boolean;
 }
@@ -243,14 +243,14 @@ interface ApplicationPluginOptions extends CommonPluginOptions {
    */
   license?: boolean;
   /**
-   * 是否开启 Nitro Mock
+   * 是否开启 Nitro 后端服务
    * @default false
    */
-  nitroMock?: boolean;
+  nitroServer?: boolean;
   /**
-   * Nitro Mock 插件配置
+   * Nitro 后端服务插件配置
    */
-  nitroMockOptions?: NitroMockPluginOptions;
+  nitroServerOptions?: NitroServerPluginOptions;
   /**
    * 是否开启控制台打印
    * @default false
@@ -338,6 +338,6 @@ export type {
   IImportMap,
   ImportmapPluginOptions,
   LibraryPluginOptions,
-  NitroMockPluginOptions,
+  NitroServerPluginOptions,
   PrintPluginOptions,
 };

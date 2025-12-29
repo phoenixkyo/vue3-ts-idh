@@ -348,9 +348,9 @@ The mock service code is located in the `apps/backend` directory. It does not ne
 
 ## Disabling Mock Service
 
-Since mock is essentially a real backend service, if you do not need the mock service, you can configure `VITE_NITRO_MOCK=false` in the `.env.development` file in the project root directory to disable the mock service.
+Since mock is essentially a real backend service, if you do not need the mock service, you can configure `VITE_NITRO_SERVER=false` in the `.env.development` file in the project root directory to disable the mock service.
 
 ```bash
 # .env.development
-VITE_NITRO_MOCK=false
+VITE_NITRO_SERVER=false
 ```

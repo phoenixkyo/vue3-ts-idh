@@ -17,7 +17,7 @@ export default eventHandler(async (event) => {
     `SELECT id, parent_id as pid, menu_type as type, menu_name as name, permission as authCode, 
             path, component, redirect, external_link as link, icon, sort_order, hidden, 
             hide_children, keep_alive, affix, status, 
-            meta_title, meta_ignore_auth, meta_hide_menu, meta_order_no as order, 
+            meta_title, meta_ignore_auth, meta_hide_menu, meta_order_no as orderNo, 
             meta_frame_src as iframeSrc
      FROM sys_menu 
      WHERE is_deleted = 0 
@@ -43,7 +43,7 @@ export default eventHandler(async (event) => {
           meta: {
             icon: menu.icon,
             title: menu.meta_title,
-            order: menu.order,
+            order: menu.orderNo,
           },
         };
 
