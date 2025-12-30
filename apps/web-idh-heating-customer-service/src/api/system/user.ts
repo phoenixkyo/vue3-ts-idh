@@ -25,10 +25,10 @@ export namespace SystemUserApi {
  * 获取用户列表数据
  */
 async function getUserList(params: Recordable<any>) {
-  return requestClient.get<{ items: Array<SystemUserApi.SystemUser>; total: number }>(
-    '/system/user/list',
-    { params },
-  );
+  return requestClient.get<{
+    items: Array<SystemUserApi.SystemUser>;
+    total: number;
+  }>('/system/user/list', { params });
 }
 
 /**

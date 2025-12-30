@@ -1,3 +1,5 @@
+import type { Recordable } from '@vben/types';
+
 import { requestClient } from '#/api/request';
 
 export namespace SystemDeptApi {
@@ -15,10 +17,10 @@ export namespace SystemDeptApi {
  * 获取部门列表数据
  */
 async function getDeptList(params?: Recordable<any>) {
-  return requestClient.get<{ items: Array<SystemDeptApi.SystemDept>; total: number }>(
-    '/system/dept/list',
-    { params },
-  );
+  return requestClient.get<{
+    items: Array<SystemDeptApi.SystemDept>;
+    total: number;
+  }>('/system/dept/list', { params });
 }
 
 /**

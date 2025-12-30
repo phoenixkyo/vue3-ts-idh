@@ -48,6 +48,33 @@ const routes: RouteRecordRaw[] = [
         },
         component: () => import('#/views/system/dept/list.vue'),
       },
+      {
+        path: '/system/post',
+        name: 'SystemPost',
+        meta: {
+          icon: 'mdi:briefcase',
+          title: $t('system.post.title'),
+        },
+        component: () => import('#/views/system/post/list.vue'),
+      },
+      {
+        path: '/system/dict',
+        name: 'SystemDict',
+        meta: {
+          icon: 'mdi:book',
+          title: $t('system.dict.title'),
+        },
+        component: () => import('#/views/system/dict/list.vue'),
+      },
+      {
+        path: '/system/log',
+        name: 'SystemLog',
+        meta: {
+          icon: 'mdi:book-open-blank-variant',
+          title: $t('system.log.title'),
+        },
+        component: () => import('#/views/system/log/list.vue'),
+      },
     ],
   },
 ];

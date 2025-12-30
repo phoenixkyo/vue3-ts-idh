@@ -17,10 +17,10 @@ export namespace SystemRoleApi {
  * 获取角色列表数据
  */
 async function getRoleList(params: Recordable<any>) {
-  return requestClient.get<{ items: Array<SystemRoleApi.SystemRole>; total: number }>(
-    '/system/role/list',
-    { params },
-  );
+  return requestClient.get<{
+    items: Array<SystemRoleApi.SystemRole>;
+    total: number;
+  }>('/system/role/list', { params });
 }
 
 /**
