@@ -1,8 +1,12 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 
+import { getDeptList } from '#/api/system/dept';
+import { getPostList } from '#/api/system/post';
+import { getRoleList } from '#/api/system/role';
 import { $t } from '#/locales';
 
+// 用户表单字段配置
 export function useFormSchema(): VbenFormSchema[] {
   return [
     {
@@ -13,27 +17,29 @@ export function useFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'Input',
+      fieldName: 'nickname',
+      label: $t('system.user.nickname'),
+      rules: 'required',
+    },
+    {
+      component: 'Input',
       fieldName: 'realName',
       label: $t('system.user.realName'),
-      rules: 'required',
     },
     {
-      component: 'Input',
+      component: 'RadioGroup',
       componentProps: {
-        type: 'password',
+        buttonStyle: 'solid',
+        options: [
+          { label: $t('system.user.gender.unknown'), value: 0 },
+          { label: $t('system.user.gender.male'), value: 1 },
+          { label: $t('system.user.gender.female'), value: 2 },
+        ],
+        optionType: 'button',
       },
-      fieldName: 'password',
-      label: $t('system.user.password'),
-      rules: 'required',
-    },
-    {
-      component: 'Input',
-      componentProps: {
-        type: 'password',
-      },
-      fieldName: 'confirmPassword',
-      label: $t('system.user.confirmPassword'),
-      rules: ['required', { same: 'password' }],
+      defaultValue: 0,
+      fieldName: 'gender',
+      label: $t('system.user.gender.label'),
     },
     {
       component: 'Input',
@@ -52,33 +58,67 @@ export function useFormSchema(): VbenFormSchema[] {
       label: $t('system.user.phone'),
     },
     {
-      component: 'Select',
+      component: 'ApiSelect',
       componentProps: {
+        allowClear: true,
+        api: getRoleList,
+        class: 'w-full',
         placeholder: $t('system.user.role'),
+        afterFetch: (data: any) => {
+          const list = Array.isArray(data) ? data : data.items || [];
+          return list.map((item: any) => ({
+            label: item.role_name || item.name,
+            value: item.id,
+          }));
+        },
       },
       fieldName: 'roleId',
       label: $t('system.user.role'),
-      rules: 'required',
     },
     {
-      component: 'Select',
+      component: 'ApiTreeSelect',
       componentProps: {
+        allowClear: true,
+        api: getDeptList,
+        class: 'w-full',
+        childrenField: 'children',
         placeholder: $t('system.user.dept'),
+        labelField: 'name',
+        valueField: 'id',
+        afterFetch: (data: any) => {
+          // 处理后端直接返回数组的情况
+          return Array.isArray(data) ? data : data.items || [];
+        },
       },
       fieldName: 'deptId',
       label: $t('system.user.dept'),
-      rules: 'required',
     },
     {
-      component: 'RadioGroup',
+      component: 'ApiSelect',
       componentProps: {
-        buttonStyle: 'solid',
-        options: [
-          { label: $t('common.enabled'), value: 1 },
-          { label: $t('common.disabled'), value: 0 },
-        ],
-        optionType: 'button',
+        allowClear: true,
+        api: getPostList,
+        class: 'w-full',
+        placeholder: $t('system.user.post'),
+        afterFetch: (data: any) => {
+          const list = Array.isArray(data) ? data : data.items || [];
+          return list.map((item: any) => ({
+            label: item.post_name || item.name,
+            value: item.id,
+          }));
+        },
       },
+      fieldName: 'postId',
+      label: $t('system.user.post'),
+    },
+    {
+      component: 'Switch',
+      componentProps: {
+        // 启用状态对应的值为1，禁用状态对应的值为0
+        activeValue: 1,
+        inactiveValue: 0,
+      },
+      // 默认为启用状态
       defaultValue: 1,
       fieldName: 'status',
       label: $t('system.user.status'),
@@ -86,6 +126,7 @@ export function useFormSchema(): VbenFormSchema[] {
   ];
 }
 
+// 用户列表查询表单字段配置
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
@@ -111,25 +152,65 @@ export function useGridFormSchema(): VbenFormSchema[] {
       label: $t('system.user.status'),
     },
     {
-      component: 'Select',
+      component: 'ApiSelect',
       componentProps: {
         allowClear: true,
+        api: getRoleList,
+        class: 'w-full',
         placeholder: $t('system.user.role'),
+        afterFetch: (data: any) => {
+          const list = Array.isArray(data) ? data : data.items || [];
+          return list.map((item: any) => ({
+            label: item.role_name || item.name,
+            value: item.id,
+          }));
+        },
       },
       fieldName: 'roleId',
       label: $t('system.user.role'),
     },
     {
-      component: 'Select',
+      component: 'ApiTreeSelect',
       componentProps: {
         allowClear: true,
+        api: getDeptList,
+        class: 'w-full',
+        childrenField: 'children',
         placeholder: $t('system.user.dept'),
+        labelField: 'name',
+        valueField: 'id',
+        afterFetch: (data: any) => {
+          // 处理后端直接返回数组的情况
+          return Array.isArray(data) ? data : data.items || [];
+        },
       },
       fieldName: 'deptId',
       label: $t('system.user.dept'),
     },
     {
-      component: 'RangePicker',
+      component: 'ApiSelect',
+      componentProps: {
+        allowClear: true,
+        api: getPostList,
+        class: 'w-full',
+        placeholder: $t('system.user.post'),
+        afterFetch: (data: any) => {
+          const list = Array.isArray(data) ? data : data.items || [];
+          return list.map((item: any) => ({
+            label: item.post_name || item.name,
+            value: item.id,
+          }));
+        },
+      },
+      fieldName: 'postId',
+      label: $t('system.user.post'),
+    },
+    {
+      component: 'DatePicker',
+      componentProps: {
+        allowClear: true,
+        type: 'daterange',
+      },
       fieldName: 'createTime',
       label: $t('system.user.createTime'),
     },
@@ -147,9 +228,27 @@ export function useColumns<T = any>(
       width: 150,
     },
     {
+      field: 'nickname',
+      title: $t('system.user.nickname'),
+      width: 150,
+    },
+    {
       field: 'realName',
       title: $t('system.user.realName'),
       width: 150,
+    },
+    {
+      field: 'gender',
+      title: $t('system.user.gender.label'),
+      width: 100,
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          { label: $t('system.user.gender.unknown'), value: 0 },
+          { label: $t('system.user.gender.male'), value: 1 },
+          { label: $t('system.user.gender.female'), value: 2 },
+        ],
+      },
     },
     {
       field: 'email',
@@ -181,6 +280,11 @@ export function useColumns<T = any>(
       width: 120,
     },
     {
+      field: 'postName',
+      title: $t('system.user.post'),
+      width: 120,
+    },
+    {
       field: 'createTime',
       title: $t('system.user.createTime'),
       width: 200,
@@ -194,11 +298,12 @@ export function useColumns<T = any>(
           onClick: onActionClick,
         },
         name: 'CellOperation',
+        options: ['edit', 'resetPassword', 'delete'],
       },
       field: 'operation',
       fixed: 'right',
       title: $t('system.user.operation'),
-      width: 130,
+      width: 180,
     },
   ];
 }

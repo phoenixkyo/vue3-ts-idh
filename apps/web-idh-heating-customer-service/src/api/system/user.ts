@@ -7,7 +7,9 @@ export namespace SystemUserApi {
     [key: string]: any;
     id: string;
     username: string;
+    nickname?: string;
     realName: string;
+    gender?: 0 | 1 | 2;
     email?: string;
     phone?: string;
     password?: string;
@@ -17,6 +19,8 @@ export namespace SystemUserApi {
     roleName?: string;
     deptId: string;
     deptName?: string;
+    postId?: string;
+    postName?: string;
     createTime?: string;
   }
 }
@@ -60,4 +64,13 @@ async function deleteUser(id: string) {
   return requestClient.delete(`/system/user/${id}`);
 }
 
-export { createUser, deleteUser, getUserList, updateUser };
+/**
+ * 重置用户密码
+ * @param id 用户 ID
+ * @param password 新密码
+ */
+async function resetUserPassword(id: string, password: string) {
+  return requestClient.post(`/system/user/${id}/reset-password`, { password });
+}
+
+export { createUser, deleteUser, getUserList, resetUserPassword, updateUser };

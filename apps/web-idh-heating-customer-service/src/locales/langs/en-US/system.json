@@ -67,17 +67,26 @@
     "list": "User List",
     "name": "User",
     "userName": "Username",
+    "nickname": "Nickname",
     "realName": "Real Name",
     "email": "Email",
     "phone": "Phone",
     "password": "Password",
     "confirmPassword": "Confirm Password",
+    "passwordMismatch": "The two passwords do not match",
     "id": "User ID",
     "status": "Status",
     "role": "Role",
     "dept": "Department",
+    "post": "Post",
     "createTime": "Creation Time",
     "operation": "Operation",
-    "avatar": "Avatar"
+    "avatar": "Avatar",
+    "gender": {
+      "label": "Gender",
+      "unknown": "Unknown",
+      "male": "Male",
+      "female": "Female"
+    }
   }
 }

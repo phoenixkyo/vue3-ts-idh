@@ -1704,9 +1704,9 @@ INSERT INTO sys_dict (dict_type, dict_code, dict_value, dict_label, description,
 ('PROPERTY_TYPE', 'REFURBISHED', 'REFURBISHED', '改造小区', '物业类型：改造', 3, 1, 0, 1, 1, 1),
 
 -- 性别
-('GENDER', 'UNKNOWN', 'UNKNOWN', '未知', '性别：未知', 1, 1, 1, 1, 1, 1),
-('GENDER', 'MALE', 'MALE', '男', '性别：男', 2, 1, 0, 1, 1, 1),
-('GENDER', 'FEMALE', 'FEMALE', '女', '性别：女', 3, 1, 0, 1, 1, 1),
+('GENDER', '0', '0', '未知', '性别：未知', 1, 1, 1, 1, 1, 1),
+('GENDER', '1', '1', '男', '性别：男', 2, 1, 0, 1, 1, 1),
+('GENDER', '2', '2', '女', '性别：女', 3, 1, 0, 1, 1, 1),
 
 -- 房屋类型
 ('HOUSE_TYPE', 'RESIDENCE', 'RESIDENCE', '住宅', '房屋类型：住宅', 1, 1, 1, 1, 1, 1),

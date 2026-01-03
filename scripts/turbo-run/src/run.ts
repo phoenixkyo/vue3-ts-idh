@@ -18,8 +18,20 @@ export async function run(options: RunOptions) {
   //   (item) => item.packageJson.name === '@vben/website',
   // );
 
-  // 只显示有对应命令的包
-  const selectPkgs = packages.filter((pkg) => {
+  // 只显示有对应命令的包，排除指定的4个项目
+  const selectPkgs = packages.filter((pkg: any) => {
+    const pkgName = pkg?.packageJson?.name;
+    // 排除antd、ele、naive、tdesign这4个项目
+    if (
+      [
+        '@vben/web-antd',
+        '@vben/web-ele',
+        '@vben/web-naive',
+        '@vben/web-tdesign',
+      ].includes(pkgName)
+    ) {
+      return false;
+    }
     return (pkg?.packageJson as Record<string, any>)?.scripts?.[command];
   });
 
@@ -27,7 +39,7 @@ export async function run(options: RunOptions) {
   if (selectPkgs.length > 1) {
     selectPkg = await select<string>({
       message: `Select the app you need to run [${command}]:`,
-      options: selectPkgs.map((item) => ({
+      options: selectPkgs.map((item: any) => ({
         label: item?.packageJson.name,
         value: item?.packageJson.name,
       })),
@@ -46,7 +58,7 @@ export async function run(options: RunOptions) {
     process.exit(1);
   }
 
-  execaCommand(`pnpm --filter=${selectPkg} run ${command}`, {
+  execaCommand(`pnpm --filter=${String(selectPkg)} run ${command}`, {
     stdio: 'inherit',
   });
 }

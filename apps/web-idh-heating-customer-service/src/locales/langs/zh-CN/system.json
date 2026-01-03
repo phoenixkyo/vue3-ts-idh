@@ -69,17 +69,26 @@
     "list": "用户列表",
     "name": "用户",
     "userName": "用户名",
+    "nickname": "昵称",
     "realName": "真实姓名",
     "email": "邮箱",
     "phone": "手机号",
     "password": "密码",
     "confirmPassword": "确认密码",
+    "passwordMismatch": "两次输入的密码不一致",
     "id": "用户ID",
     "status": "状态",
     "role": "角色",
     "dept": "部门",
+    "post": "岗位",
     "createTime": "创建时间",
     "operation": "操作",
-    "avatar": "头像"
+    "avatar": "头像",
+    "gender": {
+      "label": "性别",
+      "unknown": "未知",
+      "male": "男",
+      "female": "女"
+    }
   }
 }

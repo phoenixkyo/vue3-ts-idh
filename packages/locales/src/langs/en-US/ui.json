@@ -13,12 +13,17 @@
     "edit": "Modify {0}",
     "create": "Create {0}",
     "delete": "Delete {0}",
-    "view": "View {0}"
+    "view": "View {0}",
+    "resetPassword": "Reset Password for {0}"
   },
   "actionMessage": {
     "deleteConfirm": "Are you sure to delete {0}?",
     "deleting": "Deleting {0} ...",
     "deleteSuccess": "{0} deleted successfully",
+    "resetPasswordConfirm": "Are you sure to reset password for {0}? The new password will be 123456.",
+    "resettingPassword": "Resetting password for {0} ...",
+    "resetPasswordSuccess": "Password reset successfully for {0}. New password: 123456",
+    "resetPasswordFailed": "Failed to reset password for {0}",
     "operationSuccess": "Operation succeeded",
     "operationFailed": "Operation failed"
   },

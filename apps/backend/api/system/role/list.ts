@@ -109,10 +109,8 @@ export default eventHandler(async (event) => {
     permissions: rolePermissions[role.id] || [],
   }));
 
-  return usePageResponseSuccess(
-    page as string,
-    pageSize as string,
-    listData,
+  return usePageResponseSuccess(page as string, pageSize as string, listData, {
+    message: 'ok',
     total,
-  );
+  });
 });

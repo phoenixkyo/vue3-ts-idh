@@ -9,32 +9,61 @@ export default defineEventHandler(async (event) => {
   // 获取数据库实例
   const db = await getDb();
 
-  // 密码加密
-  const passwordHash = await bcrypt.hash(body.password, 10);
+  // 检查用户名是否已存在
+  const checkUsernameSql = `
+    SELECT id FROM sys_user 
+    WHERE username = ? AND is_deleted = 0
+  `;
+  const usernameExists = db.query(checkUsernameSql, [body.username]);
+  if (usernameExists.length > 0) {
+    return useResponseSuccess({ message: '用户名已被使用' });
+  }
+
+  // 检查邮箱是否已存在
+  if (body.email) {
+    const checkEmailSql = `
+      SELECT id FROM sys_user 
+      WHERE email = ? AND is_deleted = 0
+    `;
+    const emailExists = db.query(checkEmailSql, [body.email]);
+    if (emailExists.length > 0) {
+      return useResponseSuccess({ message: '邮箱已被使用' });
+    }
+  }
+
+  // 使用默认密码123456
+  const defaultPassword = '123456';
+  const passwordHash = await bcrypt.hash(defaultPassword, 10);
 
   // 插入用户数据
   const insertUserSql = `
     INSERT INTO sys_user (
       username, 
+      nickname, 
       real_name, 
+      gender, 
       email, 
       phone, 
       password_hash, 
       status, 
       dept_id,
+      post_id,
       created_at, 
       updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
   `;
 
   db.execute(insertUserSql, [
     body.username,
-    body.realName,
-    body.email,
-    body.phone,
+    body.nickname || body.username,
+    body.realName || '',
+    Number(body.gender || 0),
+    body.email || '',
+    body.phone || '',
     passwordHash,
-    body.status || 1,
-    body.deptId,
+    body.status,
+    body.deptId || null,
+    body.postId || null,
   ]);
 
   // 获取插入的用户ID
@@ -48,7 +77,7 @@ export default defineEventHandler(async (event) => {
       INSERT INTO sys_user_role (user_id, role_id, created_at) 
       VALUES (?, ?, CURRENT_TIMESTAMP)
     `;
-    db.execute(insertUserRoleSql, [newUserId, body.roleId]);
+    db.execute(insertUserRoleSql, [newUserId, Number(body.roleId)]);
   }
 
   // 查询新创建的用户信息，包括部门和角色

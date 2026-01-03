@@ -163,6 +163,7 @@ export type ComponentType =
   | 'IconPicker'
   | 'Input'
   | 'InputNumber'
+  | 'InputPassword'
   | 'RadioGroup'
   | 'Select'
   | 'Space'
@@ -170,6 +171,7 @@ export type ComponentType =
   | 'TimePicker'
   | 'TreeSelect'
   | 'Upload'
+  | 'VbenInputPassword'
   | BaseFormComponentType;
 
 async function initComponentAdapter() {
@@ -240,6 +242,21 @@ async function initComponentAdapter() {
     }),
     Input: withDefaultPlaceholder(ElInput, 'input'),
     InputNumber: withDefaultPlaceholder(ElInputNumber, 'input'),
+    InputPassword: (props: any, { attrs, slots }) => {
+      const { showPassword = false } = props;
+      const extraProps: Recordable<any> = {
+        type: showPassword ? 'text' : 'password',
+        showPassword: true,
+      };
+      return h(ElInput, { ...props, ...attrs, ...extraProps }, slots);
+    },
+    VbenInputPassword: (props: any, { attrs, slots }) => {
+      const extraProps: Recordable<any> = {
+        type: 'password',
+        showPassword: true,
+      };
+      return h(ElInput, { ...props, ...attrs, ...extraProps }, slots);
+    },
     RadioGroup: (props, { attrs, slots }) => {
       let defaultSlot;
       if (Reflect.has(slots, 'default')) {

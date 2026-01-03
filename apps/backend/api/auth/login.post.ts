@@ -107,26 +107,12 @@ export default defineEventHandler(async (event) => {
     // 使用bcrypt算法验证密码
     let isPasswordValid = false;
     try {
-      // 1. 使用bcrypt验证哈希密码
+      // 仅使用bcrypt验证哈希密码
       isPasswordValid = await bcrypt.compare(password, findUser.password_hash);
       console.log('bcrypt验证结果:', isPasswordValid);
-
-      // 2. 如果bcrypt验证失败，尝试直接比较（用于测试环境）
-      if (!isPasswordValid) {
-        isPasswordValid = password === findUser.password_hash;
-        console.log('直接比较结果:', isPasswordValid);
-      }
-
-      // 3. 支持明文密码'admin123'登录（用于测试）
-      if (!isPasswordValid) {
-        isPasswordValid = password === 'admin123';
-        console.log('明文密码验证结果:', isPasswordValid);
-      }
     } catch (error) {
       console.error('密码验证失败:', error);
-      // 出错时，尝试直接比较或明文密码登录
-      isPasswordValid =
-        password === findUser.password_hash || password === 'admin123';
+      isPasswordValid = false;
     }
 
     if (

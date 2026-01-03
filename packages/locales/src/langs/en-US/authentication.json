@@ -61,6 +61,11 @@
   "usernamePasswordIncorrect": "Username or password is incorrect.",
   "usernamePasswordRequired": "Username and password are required",
   "loginFailed": "Login failed, please try again later",
+  "usernameAlreadyExists": "Username already exists",
+  "emailAlreadyExists": "Email already exists",
+  "accountCreated": "Account created successfully",
+  "accountCreatedDisabled": "Account created successfully. Please contact the administrator to enable your account.",
+  "failedToCreateAccount": "Failed to create account. Please try again later.",
   "layout": {
     "center": "Align Center",
     "alignLeft": "Align Left",

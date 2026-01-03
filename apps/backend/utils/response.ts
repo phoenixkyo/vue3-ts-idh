@@ -15,18 +15,12 @@ export function usePageResponseSuccess<T = any>(
   page: number | string,
   pageSize: number | string,
   list: T[],
-  { message = 'ok' } = {},
+  { message = 'ok', total = 0 } = {},
 ) {
-  const pageData = pagination(
-    Number.parseInt(`${page}`),
-    Number.parseInt(`${pageSize}`),
-    list,
-  );
-
   return {
     ...useResponseSuccess({
-      items: pageData,
-      total: list.length,
+      items: list,
+      total: total || Math.max(list.length, 0),
     }),
     message,
   };

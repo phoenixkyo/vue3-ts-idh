@@ -61,6 +61,11 @@
   "usernamePasswordIncorrect": "用户名或密码错误",
   "usernamePasswordRequired": "用户名和密码是必填项",
   "loginFailed": "登录失败，请稍后重试",
+  "usernameAlreadyExists": "用户名已存在",
+  "emailAlreadyExists": "邮箱已存在",
+  "accountCreated": "账号创建成功",
+  "accountCreatedDisabled": "账户创建成功，请联系管理员启用您的账户。",
+  "failedToCreateAccount": "创建账号失败，请稍后重试",
   "layout": {
     "center": "居中",
     "alignLeft": "居左",
