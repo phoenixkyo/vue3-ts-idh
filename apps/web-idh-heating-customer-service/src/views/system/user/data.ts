@@ -138,8 +138,42 @@ export function useGridFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'Input',
+      fieldName: 'nickname',
+      label: $t('system.user.nickname'),
+    },
+    {
+      component: 'Input',
       fieldName: 'realName',
       label: $t('system.user.realName'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        allowClear: true,
+        options: [
+          { label: $t('system.user.gender.unknown'), value: 0 },
+          { label: $t('system.user.gender.male'), value: 1 },
+          { label: $t('system.user.gender.female'), value: 2 },
+        ],
+      },
+      fieldName: 'gender',
+      label: $t('system.user.gender.label'),
+    },
+    {
+      component: 'Input',
+      componentProps: {
+        type: 'email',
+      },
+      fieldName: 'email',
+      label: $t('system.user.email'),
+    },
+    {
+      component: 'Input',
+      componentProps: {
+        type: 'tel',
+      },
+      fieldName: 'phone',
+      label: $t('system.user.phone'),
     },
     {
       component: 'Select',
@@ -292,9 +326,11 @@ export function useColumns<T = any>(
       width: 200,
       cellRender: {
         name: 'CellFormat',
-        formatter: (params: any) => {
-          const { row } = params;
-          return formatDate(row.createTime, 'YYYY-MM-DD HH:mm:ss');
+        props: {
+          formatter: (params: any) => {
+            const { row } = params;
+            return formatDate(row.createTime, 'YYYY-MM-DD HH:mm:ss');
+          },
         },
       },
     },

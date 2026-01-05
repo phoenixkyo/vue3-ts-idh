@@ -17,8 +17,9 @@ export default eventHandler(async (event) => {
     page = 1,
     pageSize = 20,
     name,
-    id,
-    remark,
+    roleKey,
+    dataScope,
+    isSystem,
     startTime,
     endTime,
     status,
@@ -32,22 +33,25 @@ export default eventHandler(async (event) => {
     conditions.push('role_name LIKE ?');
     params.push(`%${String(name)}%`);
   }
-  if (id) {
-    conditions.push('id = ?');
-    params.push(Number(id));
+  if (roleKey) {
+    conditions.push('role_key LIKE ?');
+    params.push(`%${String(roleKey)}%`);
   }
-
-  if (remark) {
-    conditions.push('description LIKE ?');
-    params.push(`%${String(remark)}%`);
+  if (dataScope) {
+    conditions.push('data_scope = ?');
+    params.push(Number(dataScope));
+  }
+  if (isSystem !== undefined) {
+    conditions.push('is_system = ?');
+    params.push(Number(isSystem));
   }
   if (startTime) {
     conditions.push('created_at >= ?');
-    params.push(new Date(String(startTime)));
+    params.push(startTime);
   }
   if (endTime) {
     conditions.push('created_at <= ?');
-    params.push(new Date(String(endTime)));
+    params.push(endTime);
   }
   if (['0', '1'].includes(status as string)) {
     conditions.push('status = ?');
@@ -71,21 +75,27 @@ export default eventHandler(async (event) => {
 
   // 查询角色列表，移除description和sort_order字段
   const roles = db.query(
-    `SELECT id, role_key, role_name as name, status, created_at as createTime 
-     FROM sys_role 
-     ${whereClause} 
-     ORDER BY id ASC 
+    `SELECT id, role_key, role_name as name, status, data_scope as dataScope, is_system as isSystem, created_at as createTime
+     FROM sys_role
+     ${whereClause}
+     ORDER BY id ASC
      LIMIT ? OFFSET ?`,
     [...params, pageSizeNum, offset],
   );
 
+  // 转换role_key为roleKey
+  const formattedRoles = roles.map((role: any) => ({
+    ...role,
+    roleKey: role.role_key,
+  }));
+
   // 查询每个角色的权限
-  const roleIds = roles.map((role: any) => role.id);
+  const roleIds = formattedRoles.map((role: any) => role.id);
   let rolePermissions: Record<number, number[]> = {};
 
   if (roleIds.length > 0) {
     const permissionsResult = db.query(
-      `SELECT role_id, menu_id FROM sys_role_menu 
+      `SELECT role_id, menu_id FROM sys_role_menu
        WHERE role_id IN (${roleIds.map(() => '?').join(',')}) AND is_deleted = 0`,
       roleIds,
     );
@@ -104,7 +114,7 @@ export default eventHandler(async (event) => {
   }
 
   // 组装最终结果
-  const listData = roles.map((role: any) => ({
+  const listData = formattedRoles.map((role: any) => ({
     ...role,
     permissions: rolePermissions[role.id] || [],
   }));

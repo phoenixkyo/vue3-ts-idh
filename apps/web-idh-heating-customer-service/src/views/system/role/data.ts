@@ -49,7 +49,40 @@ export function useGridFormSchema(): VbenFormSchema[] {
       fieldName: 'name',
       label: $t('system.role.roleName'),
     },
-    { component: 'Input', fieldName: 'id', label: $t('system.role.id') },
+    {
+      component: 'Input',
+      fieldName: 'roleKey',
+      label: $t('system.role.roleKey'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        allowClear: true,
+        options: [
+          { label: $t('system.role.allDataScope'), value: 1 },
+          { label: $t('system.role.unitDataScope'), value: 2 },
+          { label: $t('system.role.unitAndDownDataScope'), value: 3 },
+          { label: $t('system.role.departmentDataScope'), value: 4 },
+          { label: $t('system.role.departmentAndDownDataScope'), value: 5 },
+          { label: $t('system.role.specifyDepartmentDataScope'), value: 6 },
+          { label: $t('system.role.onlySelfDataScope'), value: 7 },
+        ],
+      },
+      fieldName: 'dataScope',
+      label: $t('system.role.dataScope'),
+    },
+    {
+      component: 'Select',
+      componentProps: {
+        allowClear: true,
+        options: [
+          { label: $t('common.yes'), value: 1 },
+          { label: $t('common.no'), value: 0 },
+        ],
+      },
+      fieldName: 'isSystem',
+      label: $t('system.role.isSystem'),
+    },
     {
       component: 'Select',
       componentProps: {
@@ -63,12 +96,11 @@ export function useGridFormSchema(): VbenFormSchema[] {
       label: $t('system.role.status'),
     },
     {
-      component: 'Input',
-      fieldName: 'remark',
-      label: $t('system.role.remark'),
-    },
-    {
-      component: 'RangePicker',
+      component: 'DatePicker',
+      componentProps: {
+        allowClear: true,
+        type: 'daterange',
+      },
       fieldName: 'createTime',
       label: $t('system.role.createTime'),
     },
@@ -86,9 +118,38 @@ export function useColumns<T = any>(
       width: 200,
     },
     {
-      field: 'id',
-      title: $t('system.role.id'),
-      width: 200,
+      field: 'roleKey',
+      title: $t('system.role.roleKey'),
+      width: 150,
+    },
+    {
+      field: 'dataScope',
+      title: $t('system.role.dataScope'),
+      width: 150,
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          { label: $t('system.role.allDataScope'), value: 1 },
+          { label: $t('system.role.unitDataScope'), value: 2 },
+          { label: $t('system.role.unitAndDownDataScope'), value: 3 },
+          { label: $t('system.role.departmentDataScope'), value: 4 },
+          { label: $t('system.role.departmentAndDownDataScope'), value: 5 },
+          { label: $t('system.role.specifyDepartmentDataScope'), value: 6 },
+          { label: $t('system.role.onlySelfDataScope'), value: 7 },
+        ],
+      },
+    },
+    {
+      field: 'isSystem',
+      title: $t('system.role.isSystem'),
+      width: 120,
+      cellRender: {
+        name: 'CellTag',
+        options: [
+          { label: $t('common.yes'), value: 1 },
+          { label: $t('common.no'), value: 0 },
+        ],
+      },
     },
     {
       cellRender: {
@@ -100,19 +161,16 @@ export function useColumns<T = any>(
       width: 100,
     },
     {
-      field: 'remark',
-      minWidth: 100,
-      title: $t('system.role.remark'),
-    },
-    {
       field: 'createTime',
       title: $t('system.role.createTime'),
       width: 200,
       cellRender: {
         name: 'CellFormat',
-        formatter: (params: any) => {
-          const { row } = params;
-          return formatDate(row.createTime, 'YYYY-MM-DD HH:mm:ss');
+        props: {
+          formatter: (params: any) => {
+            const { row } = params;
+            return formatDate(row.createTime, 'YYYY-MM-DD HH:mm:ss');
+          },
         },
       },
     },
