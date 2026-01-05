@@ -4,17 +4,22 @@
     "selectRequired": "Please select {0}",
     "minLength": "{0} must be at least {1} characters",
     "maxLength": "{0} can be at most {1} characters",
+    "minMaxLength": "{0} must be between {1} and {2} characters long",
     "length": "{0} must be {1} characters long",
     "alreadyExists": "{0} `{1}` already exists",
     "startWith": "{0} must start with `{1}`",
-    "invalidURL": "Please input a valid URL"
+    "invalidURL": "Please input a valid URL",
+    "usernameFormat": "{0} can only contain letters, numbers, underscores and hyphens",
+    "emailFormat": "Please enter a valid {0}",
+    "phoneFormat": "Please enter a valid phone number"
   },
   "actionTitle": {
     "edit": "Modify {0}",
     "create": "Create {0}",
     "delete": "Delete {0}",
     "view": "View {0}",
-    "resetPassword": "Reset Password for {0}"
+    "resetPassword": "Reset Password for {0}",
+    "changeStatus": "Change Status"
   },
   "actionMessage": {
     "deleteConfirm": "Are you sure to delete {0}?",
@@ -25,7 +30,8 @@
     "resetPasswordSuccess": "Password reset successfully for {0}. New password: 123456",
     "resetPasswordFailed": "Failed to reset password for {0}",
     "operationSuccess": "Operation succeeded",
-    "operationFailed": "Operation failed"
+    "operationFailed": "Operation failed",
+    "changeStatusConfirm": "Are you sure to change the status of {0} to [{1}]?"
   },
   "placeholder": {
     "input": "Please enter",

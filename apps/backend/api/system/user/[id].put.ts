@@ -1,9 +1,54 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 import bcrypt from 'bcrypt';
 import { defineEventHandler, readBody } from 'h3';
 import { getDb } from '~/utils/db';
-import { useResponseSuccess } from '~/utils/response';
+import { useResponseError, useResponseSuccess } from '~/utils/response';
+
+// 读取国际化文件
+function loadLocaleMessages(locale: string) {
+  const localePath = path.resolve(
+    process.cwd(),
+    `../../packages/locales/src/langs/${locale}/authentication.json`,
+  );
+
+  try {
+    if (fs.existsSync(localePath)) {
+      const data = fs.readFileSync(localePath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error(`Failed to load locale messages for ${locale}:`, error);
+  }
+
+  // 加载默认语言（英文）
+  const defaultPath = path.resolve(
+    process.cwd(),
+    '../../packages/locales/src/langs/en-US/authentication.json',
+  );
+
+  try {
+    if (fs.existsSync(defaultPath)) {
+      const data = fs.readFileSync(defaultPath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Failed to load default locale messages:', error);
+  }
+
+  return {};
+}
+
+// 根据请求头获取语言偏好
+function getPreferredLanguage(event: any): string {
+  const acceptLanguage = event.node.req.headers['accept-language'] || 'en-US';
+  return acceptLanguage.startsWith('zh') ? 'zh-CN' : 'en-US';
+}
 
 export default defineEventHandler(async (event) => {
+  const lang = getPreferredLanguage(event);
+  const localeMessages = loadLocaleMessages(lang);
   const id = event.context.params.id;
   const body = await readBody(event);
 
@@ -15,7 +60,7 @@ export default defineEventHandler(async (event) => {
     'SELECT id FROM sys_user WHERE id = ? AND is_deleted = 0';
   const userExists = db.query(checkUserSql, [id]);
   if (userExists.length === 0) {
-    return useResponseSuccess({ message: '用户不存在' });
+    return useResponseError(localeMessages.userNotFound || 'User not found');
   }
 
   // 先查询现有用户数据，以便在更新时使用现有值作为默认值
@@ -30,11 +75,27 @@ export default defineEventHandler(async (event) => {
   if (body.email && body.email !== existingUser.email) {
     const checkEmailSql = `
       SELECT id FROM sys_user 
-      WHERE email = ? AND id != ? AND is_deleted = 0
+      WHERE email = ? AND id != ?
     `;
     const emailExists = db.query(checkEmailSql, [body.email, id]);
     if (emailExists.length > 0) {
-      return useResponseSuccess({ message: '邮箱已被其他用户使用' });
+      return useResponseError(
+        localeMessages.emailAlreadyExists || 'Email already exists',
+      );
+    }
+  }
+
+  // 检查用户名是否已被其他用户使用
+  if (body.username && body.username !== existingUser.username) {
+    const checkUsernameSql = `
+      SELECT id FROM sys_user 
+      WHERE username = ? AND id != ?
+    `;
+    const usernameExists = db.query(checkUsernameSql, [body.username, id]);
+    if (usernameExists.length > 0) {
+      return useResponseError(
+        localeMessages.usernameAlreadyExists || 'Username already exists',
+      );
     }
   }
 
@@ -42,6 +103,7 @@ export default defineEventHandler(async (event) => {
   let updateUserSql = `
     UPDATE sys_user 
     SET 
+      username = ?, 
       nickname = ?, 
       real_name = ?, 
       gender = ?, 
@@ -62,6 +124,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const updateParams = [
+    body.username || existingUser.username,
     body.nickname || existingUser.nickname || existingUser.username,
     body.realName || existingUser.real_name,
     body.gender === undefined ? existingUser.gender : Number(body.gender),

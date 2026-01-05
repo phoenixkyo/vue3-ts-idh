@@ -276,6 +276,20 @@ setupVbenVxeTable({
       },
     });
 
+    // 注册表格的格式化渲染器，用于格式化日期时间等
+    vxeUI.renderer.add('CellFormat', {
+      renderTableDefault(renderOpts, params) {
+        const { attrs } = renderOpts;
+        const { row, column } = params;
+        const value = row[column.field];
+        // 如果提供了formatter函数，则使用formatter函数格式化值
+        if (attrs?.formatter) {
+          return attrs.formatter(params);
+        }
+        return value;
+      },
+    });
+
     // 这里可以自行扩展 vxe-table 的全局配置，比如自定义格式化
     // vxeUI.formats.add
   },

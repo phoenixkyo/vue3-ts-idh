@@ -4,17 +4,22 @@
     "selectRequired": "请选择{0}",
     "minLength": "{0}至少{1}个字符",
     "maxLength": "{0}最多{1}个字符",
+    "minMaxLength": "{0}长度必须在{1}到{2}个字符之间",
     "length": "{0}长度必须为{1}个字符",
     "alreadyExists": "{0} `{1}` 已存在",
     "startWith": "{0}必须以 {1} 开头",
-    "invalidURL": "请输入有效的链接"
+    "invalidURL": "请输入有效的链接",
+    "usernameFormat": "{0}只能包含字母、数字、下划线和连字符",
+    "emailFormat": "请输入有效的{0}",
+    "phoneFormat": "请输入有效的手机号码"
   },
   "actionTitle": {
     "edit": "修改{0}",
     "create": "新增{0}",
     "delete": "删除{0}",
     "view": "查看{0}",
-    "resetPassword": "重置{0}密码"
+    "resetPassword": "重置{0}密码",
+    "changeStatus": "切换状态"
   },
   "actionMessage": {
     "deleteConfirm": "确定删除 {0} 吗？",
@@ -25,7 +30,8 @@
     "resetPasswordSuccess": "{0} 的密码重置成功，新密码为：123456",
     "resetPasswordFailed": "{0} 的密码重置失败",
     "operationSuccess": "操作成功",
-    "operationFailed": "操作失败"
+    "operationFailed": "操作失败",
+    "changeStatusConfirm": "你要将{0}的状态切换为【{1}】吗？"
   },
   "placeholder": {
     "input": "请输入",

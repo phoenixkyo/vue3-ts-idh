@@ -66,6 +66,7 @@
   "accountCreated": "Account created successfully",
   "accountCreatedDisabled": "Account created successfully. Please contact the administrator to enable your account.",
   "failedToCreateAccount": "Failed to create account. Please try again later.",
+  "accountDisabled": "This account has been disabled. Please contact the administrator.",
   "layout": {
     "center": "Align Center",
     "alignLeft": "Align Left",

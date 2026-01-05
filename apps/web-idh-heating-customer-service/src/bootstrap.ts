@@ -3,7 +3,7 @@ import { createApp, watchEffect } from 'vue';
 import { registerAccessDirective } from '@vben/access';
 import { registerLoadingDirective } from '@vben/common-ui';
 import { preferences } from '@vben/preferences';
-import { initStores } from '@vben/stores';
+import { initStores, setTimezoneHandler } from '@vben/stores';
 import '@vben/styles';
 import '@vben/styles/ele';
 
@@ -14,6 +14,7 @@ import { $t, setupI18n } from '#/locales';
 
 import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
+import { getTimezoneApi, setTimezoneApi } from './api/core';
 import App from './app.vue';
 import { router } from './router';
 
@@ -45,6 +46,12 @@ async function bootstrap(namespace: string) {
 
   // 国际化 i18n 配置
   await setupI18n(app);
+
+  // 配置时区处理模块
+  setTimezoneHandler({
+    getTimezone: getTimezoneApi,
+    setTimezone: setTimezoneApi,
+  });
 
   // 配置 pinia-tore
   await initStores(app, { namespace });

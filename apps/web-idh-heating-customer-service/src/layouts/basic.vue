@@ -12,6 +12,7 @@ import {
   BasicLayout,
   LockScreen,
   Notification,
+  TimezoneButton,
   UserDropdown,
 } from '@vben/layouts';
 import { preferences } from '@vben/preferences';
@@ -190,6 +191,7 @@ watch(
         @remove="(item) => item.id && remove(item.id)"
         @make-all="handleMakeAll"
       />
+      <TimezoneButton />
     </template>
     <template #extra>
       <AuthenticationLoginExpiredModal

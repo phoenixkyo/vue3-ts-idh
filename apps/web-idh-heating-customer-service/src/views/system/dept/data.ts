@@ -2,6 +2,8 @@ import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
 import type { VbenFormSchema } from '#/adapter/form';
 
+import { formatDate } from '@vben/utils';
+
 import { z } from '#/adapter/form';
 import { getDeptList } from '#/api/system/dept';
 import { $t } from '#/locales';
@@ -94,6 +96,13 @@ export function useColumns(
       field: 'createTime',
       title: $t('system.dept.createTime'),
       width: 180,
+      cellRender: {
+        name: 'CellFormat',
+        formatter: (params: any) => {
+          const { row } = params;
+          return formatDate(row.createTime, 'YYYY-MM-DD HH:mm:ss');
+        },
+      },
     },
     {
       field: 'remark',

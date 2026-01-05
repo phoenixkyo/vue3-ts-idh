@@ -115,11 +115,28 @@ export default defineEventHandler(async (event) => {
       isPasswordValid = false;
     }
 
-    if (
-      findUser.status !== 1 ||
-      findUser.is_deleted !== 0 ||
-      !isPasswordValid
-    ) {
+    // 检查用户是否已删除
+    if (findUser.is_deleted !== 0) {
+      clearRefreshTokenCookie(event);
+      return forbiddenResponse(
+        event,
+        localeMessages.usernamePasswordIncorrect ||
+          'Username or password is incorrect.',
+      );
+    }
+
+    // 检查用户是否被禁用
+    if (findUser.status !== 1) {
+      clearRefreshTokenCookie(event);
+      return forbiddenResponse(
+        event,
+        localeMessages.accountDisabled ||
+          'This account has been disabled. Please contact the administrator.',
+      );
+    }
+
+    // 检查密码是否正确
+    if (!isPasswordValid) {
       clearRefreshTokenCookie(event);
       return forbiddenResponse(
         event,

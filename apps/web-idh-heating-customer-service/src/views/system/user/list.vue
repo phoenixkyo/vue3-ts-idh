@@ -97,8 +97,8 @@ function onActionClick(e: any) {
  */
 function confirm(content: string, title: string) {
   return ElMessageBox.confirm(content, title, {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
+    confirmButtonText: $t('common.confirm'),
+    cancelButtonText: $t('common.cancel'),
     type: 'warning',
   });
 }
@@ -111,13 +111,16 @@ function confirm(content: string, title: string) {
  */
 async function onStatusChange(newStatus: number, row: any) {
   const status: Recordable<string> = {
-    0: '禁用',
-    1: '启用',
+    0: $t('common.disabled'),
+    1: $t('common.enabled'),
   };
   try {
     await confirm(
-      `你要将${row.username}的状态切换为 【${status[newStatus.toString()]}】 吗？`,
-      `切换状态`,
+      $t('ui.actionMessage.changeStatusConfirm', [
+        row.username,
+        status[newStatus.toString()],
+      ]),
+      $t('ui.actionTitle.changeStatus'),
     );
     await updateUser(row.id, { status: newStatus });
     return true;

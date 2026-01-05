@@ -66,6 +66,7 @@
   "accountCreated": "账号创建成功",
   "accountCreatedDisabled": "账户创建成功，请联系管理员启用您的账户。",
   "failedToCreateAccount": "创建账号失败，请稍后重试",
+  "accountDisabled": "该用户已被禁用，请联系管理员",
   "layout": {
     "center": "居中",
     "alignLeft": "居左",
