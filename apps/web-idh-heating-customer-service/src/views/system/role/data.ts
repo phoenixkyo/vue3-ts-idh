@@ -14,30 +14,25 @@ export function useFormSchema(): VbenFormSchema[] {
       rules: 'required',
     },
     {
-      component: 'RadioGroup',
+      component: 'Input',
+      fieldName: 'roleKey',
+      label: $t('system.role.roleKey'),
+      rules: 'required',
+    },
+    {
+      component: 'Textarea',
+      fieldName: 'description',
+      label: $t('system.role.description'),
+    },
+    {
+      component: 'Switch',
       componentProps: {
-        buttonStyle: 'solid',
-        options: [
-          { label: $t('common.enabled'), value: 1 },
-          { label: $t('common.disabled'), value: 0 },
-        ],
-        optionType: 'button',
+        activeValue: 1,
+        inactiveValue: 0,
       },
       defaultValue: 1,
       fieldName: 'status',
       label: $t('system.role.status'),
-    },
-    {
-      component: 'Textarea',
-      fieldName: 'remark',
-      label: $t('system.role.remark'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'permissions',
-      formItemClass: 'items-start',
-      label: $t('system.role.setPermissions'),
-      modelPropName: 'modelValue',
     },
   ];
 }

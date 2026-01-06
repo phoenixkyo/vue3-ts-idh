@@ -59,7 +59,7 @@
     "roleKey": "角色标识",
     "id": "角色ID",
     "status": "状态",
-    "remark": "备注",
+    "description": "角色描述",
     "createTime": "创建时间",
     "operation": "操作",
     "permissions": "权限",

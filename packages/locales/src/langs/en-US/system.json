@@ -1,0 +1,61 @@
+{
+  "role": {
+    "name": "Role",
+    "list": "Role List",
+    "roleName": "Role Name",
+    "roleKey": "Role Key",
+    "description": "Description",
+    "status": "Status",
+    "operation": "Operation",
+    "setPermissions": "Set Permissions",
+    "createTime": "Create Time",
+    "dataScope": "Data Scope",
+    "isSystem": "System Built-in",
+    "allDataScope": "All Data Scope",
+    "unitDataScope": "Unit Data Scope",
+    "unitAndDownDataScope": "Unit and Down Data Scope",
+    "departmentDataScope": "Department Data Scope",
+    "departmentAndDownDataScope": "Department and Down Data Scope",
+    "specifyDepartmentDataScope": "Specify Department Data Scope",
+    "onlySelfDataScope": "Only Self Data Scope"
+  },
+  "user": {
+    "name": "User",
+    "list": "User List",
+    "username": "Username",
+    "nickname": "Nickname",
+    "realName": "Real Name",
+    "gender": "Gender",
+    "email": "Email",
+    "phone": "Phone",
+    "status": "Status",
+    "dept": "Department",
+    "post": "Post",
+    "createTime": "Create Time",
+    "operation": "Operation"
+  },
+  "dept": {
+    "name": "Department",
+    "list": "Department List",
+    "deptName": "Department Name",
+    "parentId": "Parent Department",
+    "sortOrder": "Sort Order",
+    "status": "Status",
+    "createTime": "Create Time",
+    "operation": "Operation"
+  },
+  "menu": {
+    "name": "Menu",
+    "list": "Menu List",
+    "menuName": "Menu Name",
+    "menuType": "Menu Type",
+    "parentId": "Parent Menu",
+    "path": "Route Path",
+    "component": "Component Path",
+    "icon": "Menu Icon",
+    "sortOrder": "Sort Order",
+    "status": "Status",
+    "createTime": "Create Time",
+    "operation": "Operation"
+  }
+}

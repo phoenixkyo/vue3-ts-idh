@@ -73,9 +73,9 @@ export default eventHandler(async (event) => {
   const pageSizeNum = Number(pageSize);
   const offset = (pageNum - 1) * pageSizeNum;
 
-  // 查询角色列表，移除description和sort_order字段
+  // 查询角色列表，包含description字段
   const roles = db.query(
-    `SELECT id, role_key, role_name as name, status, data_scope as dataScope, is_system as isSystem, created_at as createTime
+    `SELECT id, role_key, role_name as name, description, status, data_scope as dataScope, is_system as isSystem, created_at as createTime
      FROM sys_role
      ${whereClause}
      ORDER BY id ASC

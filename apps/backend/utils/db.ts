@@ -62,29 +62,40 @@ class Database {
   }
 
   /**
-   * 执行SQL语句（不返回结果集）
+   * 执行SQL语句，使用exec方法，供开启事务时使用（不返回结果集）
    * @param sql SQL语句
    * @param params 参数
    * @returns 受影响的行数
    */
-  public execute(sql: string, params: any[] = []): number {
+  public exec(sql: string, params: any[] = []): number {
+    return this.db.exec(sql, params);
+  }
+
+  /**
+   * 执行SQL语句，使用prepare和step方法，供普通SQL语句执行时使用，执行完毕后清理prepared statements（不返回结果集）
+   * @param sql SQL语句
+   * @param params 参数
+   * @returns 受影响的行数
+   */
+  public execute(
+    sql: string,
+    params: any[] = [],
+    inTransaction: boolean = false,
+  ): number {
     try {
       const stmt = this.db.prepare(sql);
-
       // 绑定参数
       if (params.length > 0) {
         stmt.bind(params);
       }
-
       // 执行语句
       stmt.step();
       const changes = this.db.getRowsModified();
-
       stmt.free();
-
-      // 保存数据库
-      this.saveDatabase();
-
+      // 仅在非事务模式下保存数据库
+      if (!inTransaction) {
+        this.saveDatabase();
+      }
       return changes;
     } catch (error) {
       console.error('SQL执行失败:', error);

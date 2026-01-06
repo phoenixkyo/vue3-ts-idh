@@ -57,7 +57,7 @@
     "roleKey": "Role Key",
     "id": "Role ID",
     "status": "Status",
-    "remark": "Remark",
+    "description": "Description",
     "createTime": "Creation Time",
     "operation": "Operation",
     "permissions": "Permissions",

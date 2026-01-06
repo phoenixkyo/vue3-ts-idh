@@ -1,0 +1,61 @@
+{
+  "role": {
+    "name": "角色",
+    "list": "角色列表",
+    "roleName": "角色名称",
+    "roleKey": "角色标识",
+    "description": "角色描述",
+    "status": "状态",
+    "operation": "操作",
+    "setPermissions": "设置权限",
+    "createTime": "创建时间",
+    "dataScope": "数据权限",
+    "isSystem": "系统内置",
+    "allDataScope": "全部数据权限",
+    "unitDataScope": "本单位数据权限",
+    "unitAndDownDataScope": "本单位及以下数据权限",
+    "departmentDataScope": "本部门数据权限",
+    "departmentAndDownDataScope": "本部门及以下数据权限",
+    "specifyDepartmentDataScope": "指定部门数据权限",
+    "onlySelfDataScope": "仅本人数据权限"
+  },
+  "user": {
+    "name": "用户",
+    "list": "用户列表",
+    "username": "用户名",
+    "nickname": "昵称",
+    "realName": "真实姓名",
+    "gender": "性别",
+    "email": "邮箱",
+    "phone": "手机号",
+    "status": "状态",
+    "dept": "部门",
+    "post": "岗位",
+    "createTime": "创建时间",
+    "operation": "操作"
+  },
+  "dept": {
+    "name": "部门",
+    "list": "部门列表",
+    "deptName": "部门名称",
+    "parentId": "上级部门",
+    "sortOrder": "排序",
+    "status": "状态",
+    "createTime": "创建时间",
+    "operation": "操作"
+  },
+  "menu": {
+    "name": "菜单",
+    "list": "菜单列表",
+    "menuName": "菜单名称",
+    "menuType": "菜单类型",
+    "parentId": "上级菜单",
+    "path": "路由路径",
+    "component": "组件路径",
+    "icon": "菜单图标",
+    "sortOrder": "排序",
+    "status": "状态",
+    "createTime": "创建时间",
+    "operation": "操作"
+  }
+}

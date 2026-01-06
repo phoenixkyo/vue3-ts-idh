@@ -35,6 +35,16 @@ export function useResponseError(message: string, error: any = null) {
   };
 }
 
+export function useResponseErrorWithStatus(
+  event: H3Event<EventHandlerRequest>,
+  message: string,
+  error: any = null,
+  status: number = 400,
+) {
+  setResponseStatus(event, status);
+  return useResponseError(message, error);
+}
+
 export function forbiddenResponse(
   event: H3Event<EventHandlerRequest>,
   message = 'Forbidden Exception',

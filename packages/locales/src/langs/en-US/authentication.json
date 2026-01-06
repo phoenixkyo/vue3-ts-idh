@@ -67,6 +67,11 @@
   "accountCreatedDisabled": "Account created successfully. Please contact the administrator to enable your account.",
   "failedToCreateAccount": "Failed to create account. Please try again later.",
   "accountDisabled": "This account has been disabled. Please contact the administrator.",
+  "roleCreated": "Role created successfully",
+  "roleUpdated": "Role updated successfully",
+  "roleDeleted": "Role deleted successfully",
+  "roleKeyAlreadyExists": "Role key already exists",
+  "userDeleted": "User deleted successfully",
   "layout": {
     "center": "Align Center",
     "alignLeft": "Align Left",

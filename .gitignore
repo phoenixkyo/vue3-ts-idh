@@ -50,3 +50,5 @@ vite.config.ts.*
 .history
 .cursor
 .trae
+apps/backend/data/*.db-wal
+apps/backend/data/*.db-shm

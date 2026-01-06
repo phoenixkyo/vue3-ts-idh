@@ -99,6 +99,12 @@ const ElSwitch = defineAsyncComponent(() =>
     import('element-plus/es/components/switch/style/css'),
   ]).then(([res]) => res.ElSwitch),
 );
+const ElTextarea = defineAsyncComponent(() =>
+  Promise.all([
+    import('element-plus/es/components/input/index'),
+    import('element-plus/es/components/input/style/css'),
+  ]).then(([res]) => res.ElInput),
+);
 const ElTimePicker = defineAsyncComponent(() =>
   Promise.all([
     import('element-plus/es/components/time-picker/index'),
@@ -168,6 +174,7 @@ export type ComponentType =
   | 'Select'
   | 'Space'
   | 'Switch'
+  | 'Textarea'
   | 'TimePicker'
   | 'TreeSelect'
   | 'Upload'
@@ -281,6 +288,7 @@ async function initComponentAdapter() {
     },
     Space: ElSpace,
     Switch: ElSwitch,
+    Textarea: ElTextarea,
     TimePicker: (props, { attrs, slots }) => {
       const { name, id, isRange } = props;
       const extraProps: Recordable<any> = {};
