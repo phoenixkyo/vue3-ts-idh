@@ -47,6 +47,12 @@ function getPreferredLanguage(event: any): string {
 }
 
 export default defineEventHandler(async (event) => {
+  // 验证访问令牌，获取当前用户信息
+  const userinfo = await verifyAccessToken(event);
+  if (!userinfo) {
+    return unAuthorizedResponse(event);
+  }
+
   const lang = getPreferredLanguage(event);
   const localeMessages = loadLocaleMessages(lang);
   const body = await readBody(event);
@@ -56,7 +62,7 @@ export default defineEventHandler(async (event) => {
 
   // 检查用户名是否已存在
   const checkUsernameSql = `
-    SELECT id FROM sys_user 
+    SELECT id FROM sys_user
     WHERE username = ?
   `;
   const usernameExists = db.query(checkUsernameSql, [body.username]);
@@ -66,13 +72,19 @@ export default defineEventHandler(async (event) => {
     );
   }
 
+  // 处理email字段：如果为空字符串，设置为null，避免唯一约束冲突
+  let emailValue = body.email;
+  if (emailValue === '') {
+    emailValue = null;
+  }
+
   // 检查邮箱是否已存在
-  if (body.email) {
+  if (emailValue) {
     const checkEmailSql = `
-      SELECT id FROM sys_user 
+      SELECT id FROM sys_user
       WHERE email = ?
     `;
-    const emailExists = db.query(checkEmailSql, [body.email]);
+    const emailExists = db.query(checkEmailSql, [emailValue]);
     if (emailExists.length > 0) {
       return useResponseError(
         localeMessages.emailAlreadyExists || 'Email already exists',
@@ -87,19 +99,21 @@ export default defineEventHandler(async (event) => {
   // 插入用户数据
   const insertUserSql = `
     INSERT INTO sys_user (
-      username, 
-      nickname, 
-      real_name, 
-      gender, 
-      email, 
-      phone, 
-      password_hash, 
-      status, 
+      username,
+      nickname,
+      real_name,
+      gender,
+      email,
+      phone,
+      password_hash,
+      status,
       dept_id,
       post_id,
-      created_at, 
+      created_by,
+      updated_by,
+      created_at,
       updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
   `;
 
   db.execute(insertUserSql, [
@@ -107,12 +121,14 @@ export default defineEventHandler(async (event) => {
     body.nickname || body.username,
     body.realName || '',
     Number(body.gender || 0),
-    body.email || '',
+    emailValue,
     body.phone || '',
     passwordHash,
     body.status,
     body.deptId || null,
     body.postId || null,
+    userinfo.id,
+    userinfo.id,
   ]);
 
   // 获取插入的用户ID
@@ -123,7 +139,7 @@ export default defineEventHandler(async (event) => {
   // 插入用户角色关联
   if (body.roleId && newUserId) {
     const insertUserRoleSql = `
-      INSERT INTO sys_user_role (user_id, role_id, created_at) 
+      INSERT INTO sys_user_role (user_id, role_id, created_at)
       VALUES (?, ?, CURRENT_TIMESTAMP)
     `;
     db.execute(insertUserRoleSql, [newUserId, Number(body.roleId)]);
@@ -131,23 +147,23 @@ export default defineEventHandler(async (event) => {
 
   // 查询新创建的用户信息，包括部门和角色
   const newUserSql = `
-    SELECT 
-      u.id, 
-      u.username, 
-      u.real_name as realName, 
-      u.email, 
-      u.phone, 
-      u.status, 
+    SELECT
+      u.id,
+      u.username,
+      u.real_name as realName,
+      u.email,
+      u.phone,
+      u.status,
       u.created_at as createTime,
-      
+
       -- 部门信息
       d.id as deptId,
       d.dept_name as deptName,
-      
+
       -- 角色信息
       r.id as roleId,
       r.role_name as roleName
-      
+
     FROM sys_user u
     LEFT JOIN sys_dept d ON u.dept_id = d.id AND d.is_deleted = 0
     LEFT JOIN sys_user_role ur ON u.id = ur.user_id AND ur.is_deleted = 0

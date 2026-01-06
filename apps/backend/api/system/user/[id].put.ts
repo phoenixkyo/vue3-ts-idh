@@ -47,6 +47,12 @@ function getPreferredLanguage(event: any): string {
 }
 
 export default defineEventHandler(async (event) => {
+  // 验证访问令牌，获取当前用户信息
+  const userinfo = await verifyAccessToken(event);
+  if (!userinfo) {
+    return unAuthorizedResponse(event);
+  }
+
   const lang = getPreferredLanguage(event);
   const localeMessages = loadLocaleMessages(lang);
   const id = event.context.params.id;
@@ -65,8 +71,8 @@ export default defineEventHandler(async (event) => {
 
   // 先查询现有用户数据，以便在更新时使用现有值作为默认值
   const existingUserSql = `
-    SELECT username, nickname, real_name, gender, email, phone, status, dept_id, post_id 
-    FROM sys_user 
+    SELECT username, nickname, real_name, gender, email, phone, status, dept_id, post_id
+    FROM sys_user
     WHERE id = ? AND is_deleted = 0
   `;
   const existingUser = db.query(existingUserSql, [id])[0];
@@ -74,7 +80,7 @@ export default defineEventHandler(async (event) => {
   // 检查邮箱是否已被其他用户使用
   if (body.email && body.email !== existingUser.email) {
     const checkEmailSql = `
-      SELECT id FROM sys_user 
+      SELECT id FROM sys_user
       WHERE email = ? AND id != ?
     `;
     const emailExists = db.query(checkEmailSql, [body.email, id]);
@@ -88,7 +94,7 @@ export default defineEventHandler(async (event) => {
   // 检查用户名是否已被其他用户使用
   if (body.username && body.username !== existingUser.username) {
     const checkUsernameSql = `
-      SELECT id FROM sys_user 
+      SELECT id FROM sys_user
       WHERE username = ? AND id != ?
     `;
     const usernameExists = db.query(checkUsernameSql, [body.username, id]);
@@ -101,17 +107,18 @@ export default defineEventHandler(async (event) => {
 
   // 更新用户信息
   let updateUserSql = `
-    UPDATE sys_user 
-    SET 
-      username = ?, 
-      nickname = ?, 
-      real_name = ?, 
-      gender = ?, 
-      email = ?, 
-      phone = ?, 
-      status = ?, 
-      dept_id = ?, 
-      post_id = ?, 
+    UPDATE sys_user
+    SET
+      username = ?,
+      nickname = ?,
+      real_name = ?,
+      gender = ?,
+      email = ?,
+      phone = ?,
+      status = ?,
+      dept_id = ?,
+      post_id = ?,
+      updated_by = ?,
       updated_at = CURRENT_TIMESTAMP
   `;
 
@@ -123,16 +130,23 @@ export default defineEventHandler(async (event) => {
     statusValue = existingUser.status;
   }
 
+  // 处理email字段：如果为空字符串，设置为null，避免唯一约束冲突
+  let emailValue = body.email === undefined ? existingUser.email : body.email;
+  if (emailValue === '') {
+    emailValue = null;
+  }
+
   const updateParams = [
     body.username || existingUser.username,
     body.nickname || existingUser.nickname || existingUser.username,
     body.realName || existingUser.real_name,
     body.gender === undefined ? existingUser.gender : Number(body.gender),
-    body.email || existingUser.email || '',
+    emailValue,
     body.phone || existingUser.phone || '',
     statusValue,
     body.deptId || existingUser.dept_id || null,
     body.postId || existingUser.post_id || null,
+    userinfo.id,
   ];
 
   // 如果提供了密码，则更新密码
@@ -155,7 +169,7 @@ export default defineEventHandler(async (event) => {
 
     // 添加新的角色关联
     const insertUserRoleSql = `
-      INSERT INTO sys_user_role (user_id, role_id, created_at) 
+      INSERT INTO sys_user_role (user_id, role_id, created_at)
       VALUES (?, ?, CURRENT_TIMESTAMP)
     `;
     db.execute(insertUserRoleSql, [id, Number(body.roleId)]);
@@ -163,23 +177,23 @@ export default defineEventHandler(async (event) => {
 
   // 查询更新后的用户信息，包括部门和角色
   const updatedUserSql = `
-    SELECT 
-      u.id, 
-      u.username, 
-      u.real_name as realName, 
-      u.email, 
-      u.phone, 
-      u.status, 
+    SELECT
+      u.id,
+      u.username,
+      u.real_name as realName,
+      u.email,
+      u.phone,
+      u.status,
       u.created_at as createTime,
-      
+
       -- 部门信息
       d.id as deptId,
       d.dept_name as deptName,
-      
+
       -- 角色信息
       r.id as roleId,
       r.role_name as roleName
-      
+
     FROM sys_user u
     LEFT JOIN sys_dept d ON u.dept_id = d.id AND d.is_deleted = 0
     LEFT JOIN sys_user_role ur ON u.id = ur.user_id AND ur.is_deleted = 0

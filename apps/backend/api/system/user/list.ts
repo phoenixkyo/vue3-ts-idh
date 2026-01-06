@@ -9,7 +9,11 @@ export default defineEventHandler(async (event) => {
   const pageSize = Number.parseInt((query.pageSize as string) || '10');
   const {
     username,
+    nickname,
     realName,
+    gender,
+    email,
+    phone,
     status,
     roleId,
     deptId,
@@ -34,9 +38,29 @@ export default defineEventHandler(async (event) => {
     queryParams.push(`%${username}%`);
   }
 
+  if (nickname) {
+    whereConditions.push('u.nickname LIKE ?');
+    queryParams.push(`%${nickname}%`);
+  }
+
   if (realName) {
     whereConditions.push('u.real_name LIKE ?');
     queryParams.push(`%${realName}%`);
+  }
+
+  if (gender !== undefined) {
+    whereConditions.push('u.gender = ?');
+    queryParams.push(Number(gender));
+  }
+
+  if (email) {
+    whereConditions.push('u.email LIKE ?');
+    queryParams.push(`%${email}%`);
+  }
+
+  if (phone) {
+    whereConditions.push('u.phone LIKE ?');
+    queryParams.push(`%${phone}%`);
   }
 
   if (status !== undefined) {
@@ -73,8 +97,8 @@ export default defineEventHandler(async (event) => {
 
   // 查询用户总数
   const countSql = `
-    SELECT COUNT(*) as total 
-    FROM sys_user u 
+    SELECT COUNT(*) as total
+    FROM sys_user u
     WHERE ${whereConditions.join(' AND ')}
   `;
   const countResult = db.query(countSql, queryParams);
@@ -82,36 +106,36 @@ export default defineEventHandler(async (event) => {
 
   // 查询用户列表，关联部门和角色信息
   const userSql = `
-    SELECT 
-      u.id, 
-      u.username, 
-      u.nickname, 
-      u.real_name as realName, 
-      u.gender, 
-      u.email, 
-      u.phone, 
-      u.status, 
+    SELECT
+      u.id,
+      u.username,
+      u.nickname,
+      u.real_name as realName,
+      u.gender,
+      u.email,
+      u.phone,
+      u.status,
       u.created_at as createTime,
-      
+
       -- 部门信息
       d.id as deptId,
       d.dept_name as deptName,
-      
+
       -- 岗位信息
       p.id as postId,
       p.post_name as postName,
-      
+
       -- 角色信息（使用GROUP_CONCAT获取用户的所有角色，取第一个角色作为主要角色）
-      (SELECT r.id FROM sys_role r 
-       JOIN sys_user_role ur ON r.id = ur.role_id 
-       WHERE ur.user_id = u.id AND ur.is_deleted = 0 
+      (SELECT r.id FROM sys_role r
+       JOIN sys_user_role ur ON r.id = ur.role_id
+       WHERE ur.user_id = u.id AND ur.is_deleted = 0
        LIMIT 1) as roleId,
-      
-      (SELECT r.role_name FROM sys_role r 
-       JOIN sys_user_role ur ON r.id = ur.role_id 
-       WHERE ur.user_id = u.id AND ur.is_deleted = 0 
+
+      (SELECT r.role_name FROM sys_role r
+       JOIN sys_user_role ur ON r.id = ur.role_id
+       WHERE ur.user_id = u.id AND ur.is_deleted = 0
        LIMIT 1) as roleName
-      
+
     FROM sys_user u
     LEFT JOIN sys_dept d ON u.dept_id = d.id AND d.is_deleted = 0
     LEFT JOIN sys_post p ON u.post_id = p.id AND p.is_deleted = 0
