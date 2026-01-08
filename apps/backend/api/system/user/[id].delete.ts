@@ -89,7 +89,7 @@ export default defineEventHandler(async (event) => {
     // 提交事务
     db.exec('COMMIT;');
     transactionActive = false; // 事务提交成功后标记
-    db.saveDatabase(); // 手动保存数据库
+    db.saveDB(); // 手动保存数据库
   } catch (error) {
     console.error('Transaction failed:', error);
     // 仅当事务已开启时才执行回滚

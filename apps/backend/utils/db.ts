@@ -141,6 +141,13 @@ class Database {
   }
 
   /**
+   * 手动保存数据库到文件
+   */
+  public saveDB(): void {
+    this.saveDatabase();
+  }
+
+  /**
    * 初始化数据库
    */
   private async init(): Promise<void> {

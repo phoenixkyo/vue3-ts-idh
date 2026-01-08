@@ -72,6 +72,9 @@
   "roleDeleted": "角色删除成功",
   "roleKeyAlreadyExists": "角色标识已存在",
   "userDeleted": "用户删除成功",
+  "deptCreated": "部门创建成功",
+  "deptUpdated": "部门更新成功",
+  "deptDeleted": "部门删除成功",
   "layout": {
     "center": "居中",
     "alignLeft": "居左",

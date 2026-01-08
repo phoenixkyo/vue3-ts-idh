@@ -90,7 +90,7 @@ export default eventHandler(async (event) => {
   }
 
   // 开始事务
-  db.execute('BEGIN TRANSACTION;');
+  db.exec('BEGIN TRANSACTION;');
 
   try {
     // 插入角色基本信息
@@ -114,6 +114,7 @@ export default eventHandler(async (event) => {
         userinfo.id,
         userinfo.id,
       ],
+      true,
     );
 
     // 获取新插入角色的ID
@@ -126,15 +127,17 @@ export default eventHandler(async (event) => {
           `INSERT INTO sys_role_menu (role_id, menu_id, created_by, updated_by) 
            VALUES (?, ?, ?, ?)`,
           [roleId, menuId, userinfo.id, userinfo.id],
+          true,
         );
       }
     }
 
     // 提交事务
-    db.execute('COMMIT;');
+    db.exec('COMMIT;');
+    db.saveDB();
   } catch (error) {
     // 回滚事务
-    db.execute('ROLLBACK;');
+    db.exec('ROLLBACK;');
     throw error;
   }
 

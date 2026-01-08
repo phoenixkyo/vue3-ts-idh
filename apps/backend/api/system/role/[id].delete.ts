@@ -69,7 +69,7 @@ export default eventHandler(async (event) => {
   const db = await getDb();
 
   // 开始事务
-  db.execute('BEGIN TRANSACTION;');
+  db.exec('BEGIN TRANSACTION;');
 
   try {
     // 软删除角色基本信息
@@ -80,19 +80,21 @@ export default eventHandler(async (event) => {
         deleted_at = CURRENT_TIMESTAMP
       WHERE id = ? AND is_deleted = 0`,
       [userinfo.id, id],
+      true,
     );
 
     // 删除角色菜单关联
-    db.execute(`DELETE FROM sys_role_menu WHERE role_id = ?`, [id]);
+    db.execute(`DELETE FROM sys_role_menu WHERE role_id = ?`, [id], true);
 
     // 删除用户角色关联
-    db.execute(`DELETE FROM sys_user_role WHERE role_id = ?`, [id]);
+    db.execute(`DELETE FROM sys_user_role WHERE role_id = ?`, [id], true);
 
     // 提交事务
-    db.execute('COMMIT;');
+    db.exec('COMMIT;');
+    db.saveDB();
   } catch (error) {
     // 回滚事务
-    db.execute('ROLLBACK;');
+    db.exec('ROLLBACK;');
     throw error;
   }
 

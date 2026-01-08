@@ -4,7 +4,13 @@ import path from 'node:path';
 import bcrypt from 'bcrypt';
 import { defineEventHandler, readBody } from 'h3';
 import { getDb } from '~/utils/db';
-import { useResponseError, useResponseSuccess } from '~/utils/response';
+import { verifyAccessToken } from '~/utils/jwt-utils';
+import {
+  sleep,
+  unAuthorizedResponse,
+  useResponseError,
+  useResponseSuccess,
+} from '~/utils/response';
 
 // 读取国际化文件
 function loadLocaleMessages(locale: string) {
@@ -159,20 +165,34 @@ export default defineEventHandler(async (event) => {
   updateUserSql += ' WHERE id = ?';
   updateParams.push(id);
 
-  db.execute(updateUserSql, updateParams);
+  // 开始事务
+  db.exec('BEGIN TRANSACTION;');
 
-  // 更新用户角色关联：先删除旧的关联，再添加新的
-  if (body.roleId) {
-    // 删除旧的角色关联
-    const deleteUserRoleSql = 'DELETE FROM sys_user_role WHERE user_id = ?';
-    db.execute(deleteUserRoleSql, [id]);
+  try {
+    // 更新用户信息
+    db.execute(updateUserSql, updateParams, true);
 
-    // 添加新的角色关联
-    const insertUserRoleSql = `
-      INSERT INTO sys_user_role (user_id, role_id, created_at)
-      VALUES (?, ?, CURRENT_TIMESTAMP)
-    `;
-    db.execute(insertUserRoleSql, [id, Number(body.roleId)]);
+    // 更新用户角色关联：先删除旧的关联，再添加新的
+    if (body.roleId) {
+      // 删除旧的角色关联
+      const deleteUserRoleSql = 'DELETE FROM sys_user_role WHERE user_id = ?';
+      db.execute(deleteUserRoleSql, [id], true);
+
+      // 添加新的角色关联
+      const insertUserRoleSql = `
+        INSERT INTO sys_user_role (user_id, role_id, created_at)
+          VALUES (?, ?, CURRENT_TIMESTAMP)
+        `;
+      db.execute(insertUserRoleSql, [id, Number(body.roleId)], true);
+    }
+
+    // 提交事务
+    db.exec('COMMIT;');
+    db.saveDB();
+  } catch (error) {
+    // 回滚事务
+    db.exec('ROLLBACK;');
+    throw error;
   }
 
   // 查询更新后的用户信息，包括部门和角色

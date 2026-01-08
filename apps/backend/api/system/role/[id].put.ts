@@ -118,42 +118,57 @@ export default eventHandler(async (event) => {
     }
   }
 
-  // 更新角色基本信息
-  db.execute(
-    `UPDATE sys_role SET
-      role_name = ?,
-      role_key = ?,
-      description = ?,
-      sort_order = ?,
-      status = ?,
-      updated_by = ?
-    WHERE id = ? AND is_deleted = 0`,
-    [
-      finalRoleName,
-      finalRoleKey,
-      description,
-      sortOrder,
-      statusValue,
-      userinfo.id,
-      id,
-    ],
-  );
+  // 开始事务
+  db.exec('BEGIN TRANSACTION;');
 
-  // 只有在提供了menuIds时才更新角色菜单关联
-  if (menuIds !== undefined) {
-    // 删除旧的角色菜单关联
-    db.execute(`DELETE FROM sys_role_menu WHERE role_id = ?`, [id]);
+  try {
+    // 更新角色基本信息
+    db.execute(
+      `UPDATE sys_role SET
+        role_name = ?,
+        role_key = ?,
+        description = ?,
+        sort_order = ?,
+        status = ?,
+        updated_by = ?
+      WHERE id = ? AND is_deleted = 0`,
+      [
+        finalRoleName,
+        finalRoleKey,
+        description,
+        sortOrder,
+        statusValue,
+        userinfo.id,
+        id,
+      ],
+      true,
+    );
 
-    // 插入新的角色菜单关联
-    if (menuIds.length > 0) {
-      for (const menuId of menuIds) {
-        db.execute(
-          `INSERT INTO sys_role_menu (role_id, menu_id, created_by, updated_by)
-           VALUES (?, ?, ?, ?)`,
-          [id, menuId, userinfo.id, userinfo.id],
-        );
+    // 只有在提供了menuIds时才更新角色菜单关联
+    if (menuIds !== undefined) {
+      // 删除旧的角色菜单关联
+      db.execute(`DELETE FROM sys_role_menu WHERE role_id = ?`, [id], true);
+
+      // 插入新的角色菜单关联
+      if (menuIds.length > 0) {
+        for (const menuId of menuIds) {
+          db.execute(
+            `INSERT INTO sys_role_menu (role_id, menu_id, created_by, updated_by)
+             VALUES (?, ?, ?, ?)`,
+            [id, menuId, userinfo.id, userinfo.id],
+            true,
+          );
+        }
       }
     }
+
+    // 提交事务
+    db.exec('COMMIT;');
+    db.saveDB();
+  } catch (error) {
+    // 回滚事务
+    db.exec('ROLLBACK;');
+    throw error;
   }
 
   await sleep(300);
