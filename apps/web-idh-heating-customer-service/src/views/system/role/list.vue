@@ -1,22 +1,45 @@
 <script lang="ts" setup>
 import type { Recordable } from '@vben/types';
 
+import { ref } from 'vue';
+
 import { Page, useVbenDrawer } from '@vben/common-ui';
 import { Plus } from '@vben/icons';
 
 import { ElButton, ElLoading, ElMessage, ElMessageBox } from 'element-plus';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { getDeptList, getMenuList } from '#/api/system';
 import { deleteRole, getRoleList, updateRole } from '#/api/system/role';
 import { $t } from '#/locales';
 
 import { useColumns, useGridFormSchema } from './data';
 import Form from './modules/form.vue';
+import PermissionDialogComponent from './modules/permission-dialog.vue';
 
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: Form,
   destroyOnClose: true,
 });
+
+const [permissionDialogApi] = useVbenDrawer({
+  connectedComponent: PermissionDialogComponent,
+});
+
+const deptList = ref([]);
+const menuList = ref([]);
+
+const loadDeptList = async () => {
+  const result = await getDeptList();
+  deptList.value = result?.items || [];
+};
+
+const loadMenuList = async () => {
+  menuList.value = await getMenuList();
+};
+
+loadDeptList();
+loadMenuList();
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
@@ -71,6 +94,10 @@ function onActionClick(e: any) {
       onEdit(e.row);
       break;
     }
+    case 'permission': {
+      onPermission(e.row);
+      break;
+    }
   }
 }
 
@@ -117,6 +144,16 @@ function onEdit(row: any) {
   formDrawerApi.setData(row).open();
 }
 
+function onPermission(row: any) {
+  permissionDialogApi
+    .setData({
+      ...row,
+      deptList: deptList.value,
+      menuList: menuList.value,
+    })
+    .open();
+}
+
 function onDelete(row: any) {
   // 使用ElLoading.service替代ElMessage.loading
   const loading = ElLoading.service({
@@ -153,6 +190,10 @@ function onCreate() {
         <ElButton type="primary" @click="onCreate">
           <Plus class="size-5" />
           {{ $t('ui.actionTitle.create', [$t('system.role.name')]) }}
+        </ElButton>
+        <ElButton type="primary" @click="onPermission">
+          <Lock class="size-5" />
+          {{ $t('system.role.setPermissions') }}
         </ElButton>
       </template>
     </Grid>

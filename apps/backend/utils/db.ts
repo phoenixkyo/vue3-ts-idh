@@ -75,6 +75,7 @@ class Database {
    * 执行SQL语句，使用prepare和step方法，供普通SQL语句执行时使用，执行完毕后清理prepared statements（不返回结果集）
    * @param sql SQL语句
    * @param params 参数
+   * @param inTransaction 是否在事务中执行
    * @returns 受影响的行数
    */
   public execute(

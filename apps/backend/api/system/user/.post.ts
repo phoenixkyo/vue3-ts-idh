@@ -101,6 +101,7 @@ export default defineEventHandler(async (event) => {
   // 使用默认密码123456
   const defaultPassword = '123456';
   const passwordHash = await bcrypt.hash(defaultPassword, 10);
+  let newUserId = null;
 
   // 开始事务
   db.exec('BEGIN TRANSACTION;');
@@ -148,7 +149,7 @@ export default defineEventHandler(async (event) => {
     // 获取插入的用户ID
     const lastInsertIdSql = 'SELECT last_insert_rowid() as id';
     const lastInsertIdResult = db.query(lastInsertIdSql);
-    const newUserId = lastInsertIdResult[0]?.id;
+    newUserId = lastInsertIdResult[0]?.id;
 
     // 插入用户角色关联
     if (body.roleId && newUserId) {

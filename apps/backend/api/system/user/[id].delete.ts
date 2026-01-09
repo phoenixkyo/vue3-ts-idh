@@ -78,12 +78,8 @@ export default defineEventHandler(async (event) => {
     `;
     db.execute(deleteUserSql, [userinfo.id, id], transactionActive);
 
-    // 软删除用户角色关联
-    const deleteUserRoleSql = `
-      UPDATE sys_user_role
-      SET is_deleted = 1, deleted_at = CURRENT_TIMESTAMP
-      WHERE user_id = ?
-    `;
+    // 删除用户角色关联
+    const deleteUserRoleSql = `DELETE FROM sys_user_role WHERE role_id = ?`;
     db.execute(deleteUserRoleSql, [id], transactionActive);
 
     // 提交事务

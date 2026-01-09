@@ -75,6 +75,12 @@
   "deptCreated": "部门创建成功",
   "deptUpdated": "部门更新成功",
   "deptDeleted": "部门删除成功",
+  "dictCreated": "字典创建成功",
+  "dictUpdated": "字典更新成功",
+  "dictDeleted": "字典删除成功",
+  "postCreated": "岗位创建成功",
+  "postUpdated": "岗位更新成功",
+  "postDeleted": "岗位删除成功",
   "layout": {
     "center": "居中",
     "alignLeft": "居左",

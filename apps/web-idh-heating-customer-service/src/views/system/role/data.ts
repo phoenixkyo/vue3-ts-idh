@@ -147,13 +147,13 @@ export function useColumns<T = any>(
       },
     },
     {
+      field: 'status',
+      title: $t('system.role.status'),
+      width: 100,
       cellRender: {
         attrs: { beforeChange: onStatusChange },
         name: onStatusChange ? 'CellSwitch' : 'CellTag',
       },
-      field: 'status',
-      title: $t('system.role.status'),
-      width: 100,
     },
     {
       field: 'createTime',

@@ -128,6 +128,9 @@ setupVbenVxeTable({
           edit: {
             tooltip: $t('common.edit'),
           },
+          permission: {
+            tooltip: $t('system.role.setPermissions'),
+          },
           resetPassword: {
             tooltip: $t('ui.actionTitle.resetPassword', [row.realName]),
           },
